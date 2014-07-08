@@ -12,8 +12,12 @@ public class Face {
 		
 		for (int i = 0; i < params.length; i++) {
 			vertIndxs[i] = Integer.parseInt(params[i].split("/")[0]);
+			if (params[i].split("/").length > 1) {
 			txtrIndxs[i] = Integer.parseInt(params[i].split("/")[1]);
-			normIndxs[i] = Integer.parseInt(params[i].split("/")[2]);
+			}
+			if (params[i].split("/").length > 2) {
+				normIndxs[i] = Integer.parseInt(params[i].split("/")[2]);
+			}
 		}
 	}
 }

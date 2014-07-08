@@ -4,27 +4,50 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
+import java.security.InvalidParameterException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
 public class ObjModel {
+	/**
+	 * A {@link List} of the vertices in this model.
+	**/
 	private List<Point3f> verts = new ArrayList<Point3f>();
+	/**
+	 * A {@link List} of the texture coordinates(UV's) in this model.
+	**/
 	private List<Point3f> txtrs = new ArrayList<Point3f>();
+	/**
+	 * A {@link List} of the normals in this model.
+	**/
 	private List<Point3f> norms = new ArrayList<Point3f>();
+	/**
+	 * A {@link List} of the parameter space vertices in this model.
+	**/
 	private List<Point3f> paramSVs = new ArrayList<Point3f>();
+	/**
+	 * A {@link List} of the faces in this model. Faces link together vertices, textures, and normals.
+	**/
 	private List<Face> faces = new ArrayList<Face>();
+	/**
+	 * A {@link List} of the materials that were loaded from the .obj file.
+	**/
 	private List<MtlMaterial> mtls = new ArrayList<MtlMaterial>();
 	
 	public ObjModel(File file) throws IOException {
 		BufferedReader br = new BufferedReader(new FileReader(file));
 		String line;
 		
+		if (!file.getPath().substring(file.getPath().lastIndexOf('.')).equals(".obj")) {
+			throw new InvalidParameterException("File is not .obj");
+		}
+		
 		while ((line = br.readLine()) != null) {
 			String[] splitStr = line.split("\\s");
 			
 			//If line's arguments is three floats
-			if (splitStr[0] == "v" || splitStr[0] == "vt" || splitStr[0] == "vn" || splitStr[0] == "p") {
+			if (splitStr[0] == "v" || splitStr[0] == "vt" || splitStr[0] == "vn" || splitStr[0] == "vp") {
 				float x = Float.parseFloat(splitStr[1]);
 				float y = Float.parseFloat(splitStr[2]);
 				float z = Float.parseFloat(splitStr[3]);
@@ -93,19 +116,41 @@ public class ObjModel {
 		br.close();
 	}
 	
+	
+	/**
+	 * A {@link List} of the vertices in this model.
+	**/
 	public List<Point3f> getVertices() {
 		return verts;
 	}
+	/**
+	 * A {@link List} of the texture coordinates(UV's) in this model.
+	**/
 	public List<Point3f> getTextureCoords() {
 		return txtrs;
 	}
+	/**
+	 * A {@link List} of the normals in this model.
+	**/
 	public List<Point3f> getNormals() {
 		return norms;
 	}
+	/**
+	 * A {@link List} of the parameter space vertices in this model.
+	**/
 	public List<Point3f> getParamSpaceVerts() {
 		return paramSVs;
 	}
+	/**
+	 * A {@link List} of the faces in this model. Faces link together vertices, textures, and normals.
+	**/
 	public List<Face> getFaces() {
 		return faces;
+	}
+	/**
+	 * A {@link List} of the materials that were loaded from the .obj file.
+	**/
+	public List<MtlMaterial> getMaterials() {
+		return mtls;
 	}
 }
