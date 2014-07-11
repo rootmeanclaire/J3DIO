@@ -1,14 +1,16 @@
-package obj;
+package jml.obj;
 
 public class Face {
 	public int[] vertIndxs;
 	public int[] txtrIndxs;
 	public int[] normIndxs;
+	public int size;
 	
 	public Face(String[] params) {
-		vertIndxs = new int[params.length];
-		txtrIndxs = new int[params.length];
-		normIndxs = new int[params.length];
+		size = params.length;
+		vertIndxs = new int[size];
+		txtrIndxs = new int[size];
+		normIndxs = new int[size];
 		
 		for (int i = 0; i < params.length; i++) {
 			vertIndxs[i] = Integer.parseInt(params[i].split("/")[0]);
@@ -19,5 +21,24 @@ public class Face {
 				normIndxs[i] = Integer.parseInt(params[i].split("/")[2]);
 			}
 		}
+	}
+	
+	public boolean hasTextures() {
+		for (int i : txtrIndxs) {
+			if (i != 0) {
+				return true;
+			}
+		}
+		
+		return false;
+	}
+	public boolean hasNorms() {
+		for (int i : normIndxs) {
+			if (i != 0) {
+				return true;
+			}
+		}
+		
+		return false;
 	}
 }

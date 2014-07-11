@@ -1,4 +1,4 @@
-package obj;
+package jml.obj;
 
 public class Point3f {
 	public float x;

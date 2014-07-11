@@ -1,15 +1,17 @@
-package obj;
+package jml.obj;
 
 import java.awt.Color;
 import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.security.InvalidParameterException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MtlMaterial {
+public class MtlMaterial implements jml.Exportable {
 	/**
 	 * The string that will be used to reference this material.
 	**/
@@ -195,5 +197,34 @@ public class MtlMaterial {
 	}
 	public byte getIlluminationModel() {
 		return illum;
+	}
+
+	@Override
+	public void export(String fileName) throws FileNotFoundException {
+		if (fileName.endsWith(".mtl")) {
+			fileName = fileName.substring(0, fileName.length() - 4);
+		}
+		
+		PrintWriter out = new PrintWriter(fileName + ".mtl");
+		
+		out.println("newmtl " + name);
+		out.println(
+			"Ka " + ambient.getRed() / 255f
+			+ ' ' + ambient.getGreen() / 255f
+			+ ' ' + ambient.getBlue() / 255f
+		);
+		out.println(
+			"Kd " + diffuse.getRed() / 255f
+			+ ' ' + diffuse.getGreen() / 255f
+			+ ' ' + diffuse.getBlue() / 255f
+		);
+		out.println(
+			"Ks " + diffuse.getRed() / 255f
+			+ ' ' + diffuse.getGreen() / 255f
+			+ ' ' + diffuse.getBlue() / 255f
+		);
+		out.println("Ns " + wSpec);
+		out.println("d " + dissolve / 255f);
+		out.println("illum " + illum);
 	}
 }
