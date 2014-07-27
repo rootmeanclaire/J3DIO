@@ -1,21 +1,21 @@
 package jml.obj;
 
-public class Face {
-	public int[] vertIndxs;
+import jml.raw.RawFace;
+
+public class Face extends RawFace {
 	public int[] txtrIndxs;
 	public int[] normIndxs;
 	public int size;
 	
 	public Face(String[] params) {
-		size = params.length;
-		vertIndxs = new int[size];
+		super(new int[params.length]);
 		txtrIndxs = new int[size];
 		normIndxs = new int[size];
 		
 		for (int i = 0; i < params.length; i++) {
 			vertIndxs[i] = Integer.parseInt(params[i].split("/")[0]);
 			if (params[i].split("/").length > 1) {
-			txtrIndxs[i] = Integer.parseInt(params[i].split("/")[1]);
+				txtrIndxs[i] = Integer.parseInt(params[i].split("/")[1]);
 			}
 			if (params[i].split("/").length > 2) {
 				normIndxs[i] = Integer.parseInt(params[i].split("/")[2]);

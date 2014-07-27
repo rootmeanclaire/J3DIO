@@ -1,4 +1,4 @@
-package jml.obj;
+package jml;
 
 public class Point3f {
 	public float x;
@@ -25,5 +25,9 @@ public class Point3f {
 		if (pts.length >= 3) {
 			z = pts[2];
 		}
+	}
+	
+	public boolean equals(Point3f pt) {
+		return x == pt.x && y == pt.y && z == pt.z;
 	}
 }

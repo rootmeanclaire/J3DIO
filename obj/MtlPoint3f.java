@@ -1,5 +1,7 @@
 package jml.obj;
 
+import jml.Point3f;
+
 public class MtlPoint3f extends Point3f {
 	public MtlMaterial mtl = null;
 	

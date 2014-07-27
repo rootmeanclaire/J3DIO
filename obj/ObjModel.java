@@ -13,6 +13,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import jml.Point3f;
+
 public class ObjModel implements jml.Exportable {
 	/**
 	 * A {@link List} of the vertices in this model.
