@@ -13,9 +13,12 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import jml.Exportable;
+import jml.GLRenderable;
 import jml.Point3f;
 
-public class RawModel implements Exportable {
+import static org.lwjgl.opengl.GL11.*;
+
+public class RawModel implements Exportable, GLRenderable {
 	private List<Point3f> verts = new ArrayList<Point3f>();
 	private List<RawFace> faces = new ArrayList<RawFace>();
 	
@@ -77,5 +80,17 @@ public class RawModel implements Exportable {
 		
 		
 		out.close();
+	}
+
+	@Override
+	public void render() {
+		for (RawFace face : faces) {
+			glBegin(GL_LINE_LOOP);
+				for (int i : face.vertIndxs) {
+					Point3f vert = verts.get(i);
+					glVertex3f(vert.x, vert.y, vert.z);
+				}
+			glEnd();
+		}
 	}
 }

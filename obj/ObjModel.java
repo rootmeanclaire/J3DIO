@@ -1,5 +1,7 @@
 package jml.obj;
 
+import static org.lwjgl.opengl.GL11.*;
+
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -15,30 +17,18 @@ import java.util.Map;
 
 import jml.Point3f;
 
-public class ObjModel implements jml.Exportable {
-	/**
-	 * A {@link List} of the vertices in this model.
-	**/
+public class ObjModel implements jml.Exportable, jml.GLRenderable {
+	/**A {@link List} of the vertices in this model.**/
 	private List<Point3f> verts = new ArrayList<Point3f>();
-	/**
-	 * A {@link List} of the texture coordinates(UV's) in this model.
-	**/
+	/**A {@link List} of the texture coordinates(UV's) in this model.**/
 	private List<Point3f> txtrs = new ArrayList<Point3f>();
-	/**
-	 * A {@link List} of the normals in this model.
-	**/
+	/**A {@link List} of the normals in this model.**/
 	private List<Point3f> norms = new ArrayList<Point3f>();
-	/**
-	 * A {@link List} of the parameter space vertices in this model.
-	**/
+	/**A {@link List} of the parameter space vertices in this model.**/
 	private List<Point3f> paramSVs = new ArrayList<Point3f>();
-	/**
-	 * A {@link List} of the faces in this model. Faces link together vertices, textures, and normals.
-	**/
-	private List<Face> faces = new ArrayList<Face>();
-	/**
-	 * A {@link List} of the materials that were loaded from the .obj file.
-	**/
+	/**A {@link List} of the faces in this model. Faces link together vertices, textures, and normals.**/
+	private List<ObjFace> faces = new ArrayList<ObjFace>();
+	/**A {@link List} of the materials that were loaded from the .obj file.**/
 	private Map<String, MtlMaterial> mtls = new HashMap<String, MtlMaterial>();
 	
 	public ObjModel(File file) throws IOException {
@@ -90,7 +80,7 @@ public class ObjModel implements jml.Exportable {
 						break;
 					//Face
 					case "f":
-						faces.add(new Face(Arrays.copyOfRange(splitStr, 1, splitStr.length)));
+						faces.add(new ObjFace(Arrays.copyOfRange(splitStr, 1, splitStr.length)));
 						
 						if (currMtlName != null) {
 							for (int i : faces.get(faces.size() - 1).vertIndxs) {
@@ -139,38 +129,32 @@ public class ObjModel implements jml.Exportable {
 	}
 	
 	
-	/**
-	 * A {@link List} of the vertices in this model.
-	**/
+	/**@return A {@link List} of the vertices in this model.**/
 	public List<Point3f> getVertices() {
 		return verts;
 	}
-	/**
-	 * A {@link List} of the texture coordinates(UV's) in this model.
-	**/
+	/**@return A {@link List} of the texture coordinates(UV's) in this model.**/
 	public List<Point3f> getTextureCoords() {
 		return txtrs;
 	}
-	/**
-	 * A {@link List} of the normals in this model.
-	**/
+	/**@return A {@link List} of the normals in this model.**/
 	public List<Point3f> getNormals() {
 		return norms;
 	}
-	/**
-	 * A {@link List} of the parameter space vertices in this model.
-	**/
+	/**@return A {@link List} of the parameter space vertices in this model.**/
 	public List<Point3f> getParamSpaceVerts() {
 		return paramSVs;
 	}
 	/**
-	 * A {@link List} of the faces in this model. Faces link together vertices, textures, and normals.
+	 * @return A {@link List} of the faces in this model. Faces link together
+	 * vertices, textures, and normals.
 	**/
-	public List<Face> getFaces() {
+	public List<ObjFace> getFaces() {
 		return faces;
 	}
 	/**
-	 * An associative array of the materials loaded in the obj file. The keys are the names of the materials
+	 * @return An associative array of the materials loaded in the obj file.
+	 * The keys are the names of the materials
 	**/
 	public Map<String, MtlMaterial> getMaterials() {
 		return mtls;
@@ -231,7 +215,7 @@ public class ObjModel implements jml.Exportable {
 			for (Point3f paramSv : paramSVs) {
 				out.println("vp " + paramSv.x + ' ' + paramSv.y + ' ' + paramSv.z);
 			}
-			for (Face face : faces) {
+			for (ObjFace face : faces) {
 				if (face.hasTextures() && face.hasNorms()) {
 					StringBuilder sb = new StringBuilder("f");
 					for (int i = 0; i < face.size; i++) {
@@ -262,5 +246,28 @@ public class ObjModel implements jml.Exportable {
 		
 		
 		out.close();
+	}
+	
+	/**Does not support parameter space vertices or .mtl materials**/
+	@Override
+	public void render() {
+		for (ObjFace face : faces) {
+			glBegin(GL_LINE_LOOP);
+				for (int i = 0; i < face.size; i++) {
+					if (face.hasNorms()) {
+						Point3f norm = norms.get(face.normIndxs[i]);
+						glNormal3f(norm.x, norm.y, norm.z);
+					}
+					if (face.hasTextures()) {
+						Point3f txtr = norms.get(face.txtrIndxs[i]);
+						glTexCoord3f(txtr.x, txtr.y, txtr.z);
+					}
+					{
+						Point3f vert = verts.get(i);
+						glVertex3f(vert.x, vert.y, vert.z);
+					}
+				}
+			glEnd();
+		}
 	}
 }
