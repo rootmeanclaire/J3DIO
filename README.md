@@ -1,5 +1,7 @@
-Java Model Loader
-================
+Andect
+======
+Andect is a file IO system for 3D models.
+
 File type support
 -----------------
 ###`.obj` and `.mtl`###
