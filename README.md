@@ -3,21 +3,21 @@ Java Model Loader
 File type support
 -----------------
 ###`.obj` and `.mtl`###
-**Import:** Textures not supported
+**Import:** Textures not supported  
 **Render:** Colors and textures not supported
 
 ###`.raw`###
-**Import:** Full support
+**Import:** Full support  
 **Render:** Full support
 
 ###`.ply`###
-**Import:** In-dev
+**Import:** In-dev  
 **Render:** N/A
 
 ###`.dae`###
-**Import:** In-dev
+**Import:** N/A  
 **Render:** N/A
 
 ###`.fbx`###
-**Import:** In-dev
+**Import:** N/A  
 **Render:** N/A
