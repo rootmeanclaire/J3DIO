@@ -12,25 +12,15 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class MtlMaterial implements jml.Exportable {
-	/**
-	 * The string that will be used to reference this material.
-	**/
+	/**The string that will be used to reference this material.**/
 	private String name;
-	/**
-	 * The ambient color of this material.
-	**/
+	/**The ambient color of this material.**/
 	private Color ambient;
-	/**
-	 * The diffuse color of this material.
-	**/
+	/**The diffuse color of this material.**/
 	private Color diffuse;
-	/**
-	 * The specular color of this material.
-	**/
+	/**The specular color of this material.**/
 	private Color specular;
-	/**
-	 * The weighted specular coefficient.
-	**/
+	/**The weighted specular coefficient.**/
 	private float wSpec;
 	/**
 	 * .mtl materials do not support true transparency. Instead
@@ -39,9 +29,7 @@ public class MtlMaterial implements jml.Exportable {
 	 * of an object.
 	**/
 	private float dissolve;
-	/**
-	 * The illumination model of this material.
-	**/
+	/**The illumination model of this material.**/
 	private byte illum;
 	
 	/**
@@ -99,23 +87,23 @@ public class MtlMaterial implements jml.Exportable {
 			byte illuminationModel = 0;
 			
 			//If line's arguments is three floats
-			if (splitStr[0] == "Ka" || splitStr[0] == "Kd" || splitStr[0] == "Ks") {
-				float x = Float.parseFloat(splitStr[1]);
-				float y = Float.parseFloat(splitStr[2]);
-				float z = Float.parseFloat(splitStr[3]);
+			if (splitStr[0].equals("Ka") || splitStr[0].equals("Kd") || splitStr[0].equals("Ks")) {
+				float r = Float.parseFloat(splitStr[1]);
+				float g = Float.parseFloat(splitStr[2]);
+				float b = Float.parseFloat(splitStr[3]);
 				
 				switch(splitStr[0]) {
 					//Ambient color
 					case "Ka":
-						ambient = new Color(x, y, z);
+						ambient = new Color(r, g, b);
 						break;
 					//Diffuse color
 					case "Kd":
-						diffuse = new Color(x, y, z);
+						diffuse = new Color(r, g, b);
 						break;
 					//Specular color
 					case "Ks":
-						specular = new Color(x, y, z);
+						specular = new Color(r, g, b);
 						break;
 				}
 			} else if (splitStr[0] == "Ns" || splitStr[0] == "d" || splitStr[0] == "Tr") {
@@ -144,7 +132,7 @@ public class MtlMaterial implements jml.Exportable {
 					case "#":
 						
 						break;
-					//Illumination model
+					//Material definition
 					case "newmtl":
 						if (firstMtl) {
 							firstMtl = false;
