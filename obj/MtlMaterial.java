@@ -215,4 +215,37 @@ public class MtlMaterial implements jml.Exportable {
 		out.println("d " + dissolve / 255f);
 		out.println("illum " + illum);
 	}
+	
+	public static void exportGroup(String fileName, List<MtlMaterial> materials) throws FileNotFoundException {
+		if (fileName.endsWith(".mtl")) {
+			fileName = fileName.substring(0, fileName.length() - 4);
+		}
+		
+		PrintWriter out = new PrintWriter(fileName + ".mtl");
+		
+		for (MtlMaterial mtl : materials) {
+			out.println("newmtl " + mtl.name);
+			out.println(
+				"Ka " + mtl.ambient.getRed() / 255f
+				+ ' ' + mtl.ambient.getGreen() / 255f
+				+ ' ' + mtl.ambient.getBlue() / 255f
+			);
+			out.println(
+				"Kd " + mtl.diffuse.getRed() / 255f
+				+ ' ' + mtl.diffuse.getGreen() / 255f
+				+ ' ' + mtl.diffuse.getBlue() / 255f
+			);
+			out.println(
+				"Ks " + mtl.diffuse.getRed() / 255f
+				+ ' ' + mtl.diffuse.getGreen() / 255f
+				+ ' ' + mtl.diffuse.getBlue() / 255f
+			);
+			out.println("Ns " + mtl.wSpec);
+			out.println("d " + mtl.dissolve / 255f);
+			out.println("illum " + mtl.illum);
+		}
+		
+		
+		out.close();
+	}
 }

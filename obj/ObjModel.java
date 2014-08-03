@@ -26,10 +26,41 @@ public class ObjModel implements jml.Exportable, jml.GLRenderable {
 	private List<Point3f> norms = new ArrayList<Point3f>();
 	/**A {@link List} of the parameter space vertices in this model.**/
 	private List<Point3f> paramSVs = new ArrayList<Point3f>();
-	/**A {@link List} of the faces in this model. Faces link together vertices, textures, and normals.**/
+	/**
+	 * A {@link List} of the faces in this model. Faces link together
+	 * vertices, textures, and normals.
+	**/
 	private List<ObjFace> faces = new ArrayList<ObjFace>();
 	/**A {@link List} of the materials that were loaded from the .obj file.**/
 	private Map<String, MtlMaterial> mtls = new HashMap<String, MtlMaterial>();
+	
+	/**
+	 * @param verts
+	 * A {@link List} of the vertices in this model.
+	 * @param txtrs
+	 * A {@link List} of the texture coordinates(UV's) in this model.
+	 * @param norms
+	 * A {@link List} of the normals in this model.
+	 * @param paramSVs
+	 * A {@link List} of the parameter space vertices in this model.
+	 * @param faces
+	 * A {@link List} of the faces in this model. Faces link together
+	 * vertices, textures, and normals.
+	 * @param mtls
+	 * A {@link List} of the materials that were loaded from the .obj file.
+	**/
+	private ObjModel(List<Point3f> vertices,
+			List<Point3f> textures,
+			List<Point3f> normals,
+			List<Point3f> paramaterSpaceVertices,
+			List<ObjFace> faces,
+			Map<String, MtlMaterial> materials) {
+		this.verts = vertices;
+		this.txtrs = textures;
+		this.paramSVs = paramaterSpaceVertices;
+		this.faces = faces;
+		this.mtls = materials;
+	}
 	
 	public ObjModel(File file) throws IOException {
 		BufferedReader br = new BufferedReader(new FileReader(file));
@@ -127,7 +158,6 @@ public class ObjModel implements jml.Exportable, jml.GLRenderable {
 		
 		br.close();
 	}
-	
 	
 	/**@return A {@link List} of the vertices in this model.**/
 	public List<Point3f> getVertices() {
