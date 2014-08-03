@@ -1,6 +1,6 @@
-Andect
+J3DIO
 ======
-Andect is a file IO system for 3D models.
+Java 3D Input Output, or J3DIO(say "jedio"), is a file IO system for 3D models. 
 
 File type support
 -----------------
