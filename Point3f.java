@@ -1,6 +1,8 @@
-package jml;
+package j3dio;
 
-public class Point3f {
+import java.nio.ByteBuffer;
+
+public class Point3f implements Byteable {
 	public float x;
 	public float y;
 	public float z;
@@ -29,5 +31,35 @@ public class Point3f {
 	
 	public boolean equals(Point3f pt) {
 		return x == pt.x && y == pt.y && z == pt.z;
+	}
+	
+	public byte[] toBytes() {
+		byte[] allBytes = new byte[getByteSize()];
+		int i = 0;
+		
+		byte[] xbytes = ByteBuffer.allocate(4).putFloat(x).array();
+		byte[] ybytes = ByteBuffer.allocate(4).putFloat(y).array();
+		byte[] zbytes = ByteBuffer.allocate(4).putFloat(z).array();
+		
+		for (byte b : xbytes) {
+			allBytes[i] = b;
+			i++;
+		}
+		for (byte b : ybytes) {
+			allBytes[i] = b;
+			i++;
+		}
+		for (byte b : zbytes) {
+			allBytes[i] = b;
+			i++;
+		}
+		
+		
+		return allBytes;
+	}
+	
+	@Override
+	public int getByteSize() {
+		return 12;
 	}
 }

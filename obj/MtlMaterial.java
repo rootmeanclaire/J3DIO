@@ -1,4 +1,4 @@
-package jml.obj;
+package j3dio.obj;
 
 import java.awt.Color;
 import java.io.BufferedReader;
@@ -11,7 +11,7 @@ import java.security.InvalidParameterException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MtlMaterial implements jml.Exportable {
+public class MtlMaterial implements j3dio.Exportable {
 	/**The string that will be used to reference this material.**/
 	private String name;
 	/**The ambient color of this material.**/

@@ -1,4 +1,8 @@
-package jml.ply;
+package j3dio.ply;
+
+import j3dio.Exportable;
+import j3dio.ply.Element.Datatype;
+import j3dio.ply.Element.ListType;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -12,9 +16,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import jml.Exportable;
-import jml.ply.Element.Datatype;
-import jml.ply.Element.ListType;
 
 public class PlyModel implements Exportable {
 	public enum Format {ASCII, BIN_LITTLE_ENDIAN, BIN_BIG_ENDIAN}

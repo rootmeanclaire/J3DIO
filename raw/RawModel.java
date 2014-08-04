@@ -1,4 +1,8 @@
-package jml.raw;
+package j3dio.raw;
+
+import j3dio.Exportable;
+import j3dio.GLRenderable;
+import j3dio.Point3f;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -12,9 +16,6 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import jml.Exportable;
-import jml.GLRenderable;
-import jml.Point3f;
 
 import static org.lwjgl.opengl.GL11.*;
 

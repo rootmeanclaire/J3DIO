@@ -1,6 +1,8 @@
-package jml.obj;
+package j3dio.obj;
 
 import static org.lwjgl.opengl.GL11.*;
+
+import j3dio.Point3f;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -15,9 +17,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import jml.Point3f;
 
-public class ObjModel implements jml.Exportable, jml.GLRenderable {
+public class ObjModel implements j3dio.Exportable, j3dio.GLRenderable {
 	/**A {@link List} of the vertices in this model.**/
 	private List<Point3f> verts = new ArrayList<Point3f>();
 	/**A {@link List} of the texture coordinates(UV's) in this model.**/

@@ -1,6 +1,6 @@
-package jml.obj;
+package j3dio.obj;
 
-import jml.Point3f;
+import j3dio.Point3f;
 
 public class MtlPoint3f extends Point3f {
 	public MtlMaterial mtl = null;

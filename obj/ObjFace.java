@@ -1,6 +1,6 @@
-package jml.obj;
+package j3dio.obj;
 
-import jml.raw.RawFace;
+import j3dio.raw.RawFace;
 
 public class ObjFace extends RawFace {
 	public int[] txtrIndxs;
