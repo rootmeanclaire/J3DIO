@@ -36,11 +36,23 @@ File type support
 **Import/Export:** Colors not supported  
 **Render:** Colors not supported
 
+####`.fbx`####
+**Import/Export:** N/A  
+**Render:** N/A
+
+####`.x`####
+**Import/Export:** N/A  
+**Render:** N/A
+
 ####`.dae`####
 **Import/Export:** N/A  
 **Render:** N/A
 
-####`.fbx`####
+####`.ms3d`####
+**Import/Export:** N/A  
+**Render:** N/A
+
+####`.3ds`####
 **Import/Export:** N/A  
 **Render:** N/A
 
