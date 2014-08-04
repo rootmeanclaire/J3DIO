@@ -24,7 +24,7 @@ File types
 **Render:** Full support
 
 ###`.ply`###
-**Import:** Binary not supported
+**Import:** Binary not supported  
 **Render:** Not supported
 
 ###`.stl`###
