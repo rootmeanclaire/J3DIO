@@ -4,26 +4,30 @@ Java 3D Input Output, or J3DIO(say "jedio"), is a file IO system for 3D models.
 
 File type support
 -----------------
-| File type | Import | Export | Render  |
-|-----------|--------|--------|---------|
-|   .obj    | Yes    | Yes    | Yes     |
-|   .mtl    | Yes    | Yes    | Partial |
-|   .raw    | Yes    | Yes    | Yes     |
-|   .ply    | No     | No     | No      |
-|   .dae    | No     | No     | No      |
-|   .fbx    | No     | No     | No      |
+| File type | Import  | Export  | Render  |
+|-----------|---------|---------|---------|
+|   .obj    | Yes     | Yes     | Yes     |
+|   .mtl    | Yes     | Yes     | Partial |
+|   .raw    | Yes     | Yes     | Yes     |
+|   .ply    | Partial | Partial | No      |
+|   .dae    | No      | No      | No      |
+|   .fbx    | No      | No      | No      |
 
 File types
 ----------
 ###`.obj` and `.mtl`###
 **Import:** Textures not supported  
-**Render:** Colors and textures not supported
+**Render:** Materials not supported
 
 ###`.raw`###
 **Import:** Full support  
 **Render:** Full support
 
 ###`.ply`###
+**Import:** Binary not supported
+**Render:** Not supported
+
+###`.stl`###
 **Import:** In-dev  
 **Render:** N/A
 
