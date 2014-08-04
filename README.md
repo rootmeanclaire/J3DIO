@@ -10,6 +10,7 @@ File type support
 |   .mtl    | Yes     | Yes     | Partial |
 |   .raw    | Yes     | Yes     | Yes     |
 |   .ply    | Partial | Partial | No      |
+|   .stl    | Partial | Partial | Partial |
 |   .dae    | No      | No      | No      |
 |   .fbx    | No      | No      | No      |
 
@@ -26,8 +27,8 @@ File type support
 **Render:** Not supported
 
 ###`.stl`###
-**Import:** In-dev  
-**Render:** N/A
+**Import:** Colors not supported  
+**Render:** Colors not supported
 
 ###`.dae`###
 **Import:** N/A  
