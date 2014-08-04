@@ -29,7 +29,7 @@ File type support
 **Render:** Full support
 
 ####`.ply`####
-**Import/Export:** Binary not supported  
+**Import/Export:** Binary, Colors, and Textures not supported  
 **Render:** Not supported
 
 ####`.stl`####
