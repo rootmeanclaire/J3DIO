@@ -4,8 +4,8 @@ import java.io.IOException;
 
 public interface Exportable {
 	/**
-	 * @param fileName The full path, including file name, of the export destination without an extension.
-	 * @throws IOException 
+	 * @param fileName The path, including the file name, of the export destination.
+	 * @throws IOException
 	**/
 	public void export(String fileName) throws IOException;
 }

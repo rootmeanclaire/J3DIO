@@ -28,7 +28,6 @@ public class PlyModel implements Exportable {
 		StringBuilder sb = new StringBuilder();
 		Format format = null;
 		boolean firstElement = true;
-		int headerEndLn = 0;
 		
 		if (!file.getPath().substring(file.getPath().lastIndexOf('.')).equals(".ply")) {
 			throw new InvalidParameterException("File is not .ply");
@@ -80,7 +79,6 @@ public class PlyModel implements Exportable {
 				sb.append(line + "\n");
 			}
 			else if (splitStr[0].equals("end_header")) {
-				headerEndLn = ln;
 				elements.put(new Element(sb.toString()), Integer.parseInt(sb.toString().split("\\s")[2]));
 				break;
 			}

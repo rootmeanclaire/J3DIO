@@ -14,7 +14,6 @@ import static j3dio.ply.Element.Datatype.UINT;
 import static j3dio.ply.Element.Datatype.UINT16;
 import static j3dio.ply.Element.Datatype.UINT32;
 import static j3dio.ply.Element.Datatype.USHORT;
-
 import j3dio.ply.Element.ListType;
 
 import java.security.InvalidParameterException;
@@ -23,9 +22,6 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-import com.sun.xml.internal.bind.v2.runtime.unmarshaller.XsiNilLoader.Array;
-
 
 public class ElementInstance {
 	public final String tyepname;
@@ -167,6 +163,7 @@ public class ElementInstance {
 			);
 		}
 	}
+	@SuppressWarnings({"unchecked", "rawtypes"})
 	private static Object newProperty(Object datatype, String valStr) {
 		if (datatype == CHAR ||
 			datatype == UCHAR) {

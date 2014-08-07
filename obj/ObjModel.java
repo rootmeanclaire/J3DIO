@@ -1,8 +1,13 @@
 package j3dio.obj;
 
-import static org.lwjgl.opengl.GL11.*;
-
+import static org.lwjgl.opengl.GL11.GL_LINE_LOOP;
+import static org.lwjgl.opengl.GL11.glBegin;
+import static org.lwjgl.opengl.GL11.glEnd;
+import static org.lwjgl.opengl.GL11.glNormal3f;
+import static org.lwjgl.opengl.GL11.glTexCoord3f;
+import static org.lwjgl.opengl.GL11.glVertex3f;
 import j3dio.Point3f;
+import j3dio.UV;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -17,12 +22,11 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-
 public class ObjModel implements j3dio.Exportable, j3dio.GLRenderable {
 	/**A {@link List} of the vertices in this model.**/
 	private List<Point3f> verts = new ArrayList<Point3f>();
 	/**A {@link List} of the texture coordinates(UV's) in this model.**/
-	private List<Point3f> txtrs = new ArrayList<Point3f>();
+	private List<UV> txtrs = new ArrayList<UV>();
 	/**A {@link List} of the normals in this model.**/
 	private List<Point3f> norms = new ArrayList<Point3f>();
 	/**A {@link List} of the parameter space vertices in this model.**/
@@ -50,8 +54,9 @@ public class ObjModel implements j3dio.Exportable, j3dio.GLRenderable {
 	 * @param mtls
 	 * A {@link List} of the materials that were loaded from the .obj file.
 	**/
+	@SuppressWarnings("unused")
 	private ObjModel(List<Point3f> vertices,
-			List<Point3f> textures,
+			List<UV> textures,
 			List<Point3f> normals,
 			List<Point3f> paramaterSpaceVertices,
 			List<ObjFace> faces,
@@ -75,8 +80,14 @@ public class ObjModel implements j3dio.Exportable, j3dio.GLRenderable {
 		while ((line = br.readLine()) != null) {
 			String[] splitStr = line.split("\\s");
 			
+			//If line is comment
+			if (line.trim().startsWith("#")) {
+				//TODO
+				continue;
+			}
+			
 			//If line's arguments is three floats
-			if (splitStr[0].equals("v") || splitStr[0].equals("vt") || splitStr[0].equals("vn") || splitStr[0].equals("vp")) {
+			if (splitStr[0].equals("v") || splitStr[0].equals("vn") || splitStr[0].equals("vp")) {
 				float x = Float.parseFloat(splitStr[1]);
 				float y = Float.parseFloat(splitStr[2]);
 				float z = Float.parseFloat(splitStr[3]);
@@ -91,10 +102,6 @@ public class ObjModel implements j3dio.Exportable, j3dio.GLRenderable {
 							currMtlName = null;
 						}
 						break;
-					//Vertex texture
-					case "vt":
-						txtrs.add(new Point3f(x, y, z));
-						break;
 					//Vertex normal
 					case "vn":
 						norms.add(new Point3f(x, y, z));
@@ -106,9 +113,9 @@ public class ObjModel implements j3dio.Exportable, j3dio.GLRenderable {
 				}
 			} else {
 				switch (splitStr[0]) {
-					//Comment
-					case "#":
-						//TODO
+					//Texture coordinate
+					case "vt":
+						txtrs.add(new UV(Float.parseFloat(splitStr[1]), Float.parseFloat(splitStr[2])));
 						break;
 					//Face
 					case "f":
@@ -165,7 +172,7 @@ public class ObjModel implements j3dio.Exportable, j3dio.GLRenderable {
 		return verts;
 	}
 	/**@return A {@link List} of the texture coordinates(UV's) in this model.**/
-	public List<Point3f> getTextureCoords() {
+	public List<UV> getTextureCoords() {
 		return txtrs;
 	}
 	/**@return A {@link List} of the normals in this model.**/
@@ -200,34 +207,7 @@ public class ObjModel implements j3dio.Exportable, j3dio.GLRenderable {
 		
 		PrintWriter out;
 		if (!mtls.isEmpty()) {
-			out = new PrintWriter(fileName + ".mtl");
-			
-			for (MtlMaterial mtl : mtls.values()) {
-				out.println("newmtl " + mtl.getName());
-				
-				out.println(
-					"Ka " + mtl.getAmbientColor().getRed() / 255f
-					+ ' ' + mtl.getAmbientColor().getGreen() / 255f
-					+ ' ' + mtl.getAmbientColor().getBlue() / 255f
-				);
-				
-				out.println(
-					"Kd " + mtl.getDiffuseColor().getRed() / 255f
-					+ ' ' + mtl.getDiffuseColor().getGreen() / 255f
-					+ ' ' + mtl.getDiffuseColor().getBlue() / 255f
-				);
-				
-				out.println(
-					"Ks " + mtl.getSpecularColor().getRed() / 255f
-					+ ' ' + mtl.getSpecularColor().getGreen() / 255f
-					+ ' ' + mtl.getSpecularColor().getBlue() / 255f
-				);
-				out.println("Ns " + mtl.getWeightedSpecularCoeff());
-				
-				out.println("d " + mtl.getTransparency() / 255f);
-				
-				out.println("illum " + mtl.getIlluminationModel());
-			}
+			MtlMaterial.exportGroup(fileName, mtls.values());
 		}
 		{
 			out = new PrintWriter(fileName + ".obj");
@@ -237,8 +217,8 @@ public class ObjModel implements j3dio.Exportable, j3dio.GLRenderable {
 				}
 				out.println("v " + vert.x + ' ' + vert.y + ' ' + vert.z);
 			}
-			for (Point3f txtr : txtrs) {
-				out.println("vt " + txtr.x + ' ' + txtr.y + ' ' + txtr.z);
+			for (UV txtr : txtrs) {
+				out.println("vt " + txtr.u + ' ' + txtr.v);
 			}
 			for (Point3f norm : norms) {
 				out.println("vn " + norm.x + ' ' + norm.y + ' ' + norm.z);
@@ -279,9 +259,20 @@ public class ObjModel implements j3dio.Exportable, j3dio.GLRenderable {
 		out.close();
 	}
 	
-	/**Does not support parameter space vertices or .mtl materials**/
+	/**
+	 * <b>DEPRECATED</b> use <code>glrender()</code> instead
+	 * <br />
+	 * Does not support parameter space vertices or .mtl materials
+	**/
+	@Deprecated
 	@Override
 	public void render() {
+		glrender();
+	}
+	
+	/**Does not support parameter space vertices or .mtl materials**/
+	@Override
+	public void glrender() {
 		for (ObjFace face : faces) {
 			glBegin(GL_LINE_LOOP);
 				for (int i = 0; i < face.size; i++) {

@@ -29,6 +29,11 @@ public class Point3f implements Byteable {
 		}
 	}
 	
+	@Override
+	public String toString() {
+		return this.getClass().getName() + "@" + Integer.toHexString(super.hashCode()) + "{" + x + "," + y + "," + z + "}";
+	}
+	
 	public boolean equals(Point3f pt) {
 		return x == pt.x && y == pt.y && z == pt.z;
 	}

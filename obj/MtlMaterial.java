@@ -9,6 +9,7 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.security.InvalidParameterException;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 public class MtlMaterial implements j3dio.Exportable {
@@ -29,8 +30,9 @@ public class MtlMaterial implements j3dio.Exportable {
 	 * of an object.
 	**/
 	private float dissolve;
+	private float refraction;
 	/**The illumination model of this material.**/
-	private byte illum;
+	private boolean[] illums = new boolean[11];
 	
 	/**
 	 * @param name
@@ -47,18 +49,27 @@ public class MtlMaterial implements j3dio.Exportable {
 	 * transparency because it doesn't depend upon the thickness
 	 * of an object.
 	 * @param transparency
-	 * The illumination model of this material.
+	 * The transparency or "dissolve" factor of this material
 	 * @param illuminationModel
-	 * The illumination model of this material.
+	 * The illumination models of this material.
 	**/
-	private MtlMaterial(String name, Color ambient, Color diffuse, Color specular, float weightedSpecularCoeff, float transparency, byte illuminationModel) {
+	private MtlMaterial(
+			String name,
+			Color ambient,
+			Color diffuse,
+			Color specular,
+			float weightedSpecularCoeff,
+			float transparency,
+			float refraction,
+			boolean[] illuminationModels) {
 		this.name = name;
 		this.ambient = ambient;
 		this.diffuse = diffuse;
 		this.specular = specular;
 		this.wSpec = weightedSpecularCoeff;
 		this.dissolve = transparency;
-		this.illum = illuminationModel;
+		this.refraction = refraction;
+		this.illums = illuminationModels;
 	}
 	
 	/**
@@ -84,7 +95,14 @@ public class MtlMaterial implements j3dio.Exportable {
 			Color specular = null;
 			float wSpec = 0;
 			float dissolve = 0;
-			byte illuminationModel = 0;
+			float refraction = 1f;
+			boolean[] illuminationModels = new boolean[11];
+			
+			//If line is comment
+			if (line.trim().startsWith("#")) {
+				//TODO
+				continue;
+			}
 			
 			//If line's arguments is three floats
 			if (splitStr[0].equals("Ka") || splitStr[0].equals("Kd") || splitStr[0].equals("Ks")) {
@@ -106,7 +124,7 @@ public class MtlMaterial implements j3dio.Exportable {
 						specular = new Color(r, g, b);
 						break;
 				}
-			} else if (splitStr[0] == "Ns" || splitStr[0] == "d" || splitStr[0] == "Tr") {
+			} else if (splitStr[0].equals("Ns") || splitStr[0].equals("d") || splitStr[0].equals("Tr") || splitStr[0].equals("Ni")) {
 				float arg = Float.parseFloat(splitStr[1]);
 				
 				switch (splitStr[0]) {
@@ -117,28 +135,31 @@ public class MtlMaterial implements j3dio.Exportable {
 					//Transparency
 					case "d":
 						dissolve = arg;
+						if (splitStr[1].equals("-halo")) {
+							//TODO
+						}
 						break;
 					//Transparency (alternative key)
 					case "Tr":
 						dissolve = arg;
 						break;
+					//Optical density (Index of refraction)
+					case "Ni":
+						refraction = arg;
+						break;
 					default:
-						
+						//TODO
 						break;
 				}
 			} else {
 				switch (splitStr[0]) {
-					//Comment
-					case "#":
-						
-						break;
 					//Material definition
 					case "newmtl":
 						if (firstMtl) {
 							firstMtl = false;
 							name = splitStr[1];
 						} else {
-							materials.add(new MtlMaterial(name, ambient, diffuse, specular, wSpec, dissolve, illuminationModel));
+							materials.add(new MtlMaterial(name, ambient, diffuse, specular, wSpec, dissolve, refraction, illuminationModels));
 							//Set default values
 							name = splitStr[1];
 							ambient = null;
@@ -146,12 +167,17 @@ public class MtlMaterial implements j3dio.Exportable {
 							specular = null;
 							wSpec = 0;
 							dissolve = 0;
-							illuminationModel = 0;
+							refraction = 1f;
+							illuminationModels = new boolean[11];
 						}
 						break;
 					//Illumination model
 					case "illum":
-						illuminationModel = Byte.parseByte(splitStr[1]);
+						int temp = Integer.parseInt(splitStr[1]);
+						
+						if (temp >= 0 && temp <= 10) {
+							illuminationModels[temp] = true;
+						}
 						break;
 					default:
 						
@@ -183,8 +209,11 @@ public class MtlMaterial implements j3dio.Exportable {
 	public float getTransparency() {
 		return dissolve;
 	}
-	public byte getIlluminationModel() {
-		return illum;
+	public float getIndexOfRefraction() {
+		return refraction;
+	}
+	public boolean[] getIlluminationModels() {
+		return illums;
 	}
 
 	@Override
@@ -213,10 +242,11 @@ public class MtlMaterial implements j3dio.Exportable {
 		);
 		out.println("Ns " + wSpec);
 		out.println("d " + dissolve / 255f);
-		out.println("illum " + illum);
+		out.println("Ni " + refraction);
+		out.println("illum " + illums);
 	}
 	
-	public static void exportGroup(String fileName, List<MtlMaterial> materials) throws FileNotFoundException {
+	public static void exportGroup(String fileName, Collection<MtlMaterial> materials) throws FileNotFoundException {
 		if (fileName.endsWith(".mtl")) {
 			fileName = fileName.substring(0, fileName.length() - 4);
 		}
@@ -242,7 +272,12 @@ public class MtlMaterial implements j3dio.Exportable {
 			);
 			out.println("Ns " + mtl.wSpec);
 			out.println("d " + mtl.dissolve / 255f);
-			out.println("illum " + mtl.illum);
+			out.println("Ni " + mtl.getIndexOfRefraction());
+			for (int i = 0; i <= 10; i++) {
+				if (mtl.getIlluminationModels()[i]) {
+					out.println("illum " + i);
+				}
+			}
 		}
 		
 		

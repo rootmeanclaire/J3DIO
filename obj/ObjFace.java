@@ -5,7 +5,6 @@ import j3dio.raw.RawFace;
 public class ObjFace extends RawFace {
 	public int[] txtrIndxs;
 	public int[] normIndxs;
-	public int size;
 	
 	public ObjFace(String[] params) {
 		super(new int[params.length]);

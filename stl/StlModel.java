@@ -222,8 +222,15 @@ public class StlModel implements Exportable, Byteable, GLRenderable {
 		return 80 + faces.size() * faces.get(0).getByteSize();
 	}
 	
+	/**<b>DEPRECATED</b> use <code>glrender()</code> instead**/
+	@Deprecated
 	@Override
 	public void render() {
+		glrender();
+	}
+	
+	@Override
+	public void glrender() {
 		for (FaceT face : faces) {
 			glBegin(GL_TRIANGLES);
 				glVertex3f(face.vert1.x, face.vert1.y, face.vert1.z);
