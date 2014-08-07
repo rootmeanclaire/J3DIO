@@ -7,6 +7,21 @@ Download
 --------
 Click [here][1] to download the latest version of J3DIO for Java 7
 
+What's new
+----------
+ * Fixed `.raw` loading glitch
+ * `ObjModel`
+	 * Fixed render glitch
+	 * Fixed texture coordinate processing
+ * `MtlMaterial`
+	 * Can store multiple illumination models
+	 * Can store index of refraction
+	 * Altered comment processing
+ * Suppressed warnings on `PlyModel`
+ * Deprecated `GLRenderable.render()`
+	 * Replaced with `GLRenderable.glrender()`
+ * Added `toString()` for `Point3f`
+ * Commented
 
 File type support
 -----------------
