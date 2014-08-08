@@ -12,6 +12,7 @@ What's new
  * Fixed `.mtl` loader
  * Creted `Definable`
  * Changed how colors are stored in `MtlModel`s
+
 File type support
 -----------------
 | File type | Import  | Export  | Render  |
