@@ -260,15 +260,15 @@ public class ObjModel implements j3dio.Exportable, j3dio.GLRenderable {
 			glBegin(GL_LINE_LOOP);
 				for (int i = 0; i < face.size; i++) {
 					if (face.hasNorms()) {
-						Point3f norm = norms.get(face.normIndxs[i]);
+						Point3f norm = norms.get(face.normIndxs[i] - 1);
 						glNormal3f(norm.x, norm.y, norm.z);
 					}
 					if (face.hasTextures()) {
-						Point3f txtr = norms.get(face.txtrIndxs[i]);
+						Point3f txtr = norms.get(face.txtrIndxs[i] - 1);
 						glTexCoord3f(txtr.x, txtr.y, txtr.z);
 					}
 					{
-						Point3f vert = verts.get(i);
+						Point3f vert = verts.get(face.vertIndxs[i] - 1);
 						glVertex3f(vert.x, vert.y, vert.z);
 					}
 				}
