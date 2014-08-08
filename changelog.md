@@ -1,5 +1,11 @@
 Beta
 ====
+4.1.1
+-----
+ * Fixed `.mtl` loader
+ * Creted `Definable`
+ * Changed how colors are stored in `MtlModel`s
+
 4.1
 ---
  * Fixed `.raw` loading glitch

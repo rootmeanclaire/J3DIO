@@ -1,6 +1,7 @@
 package j3dio.obj;
 
-import java.awt.Color;
+import j3dio.FloatColor;
+
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -16,11 +17,11 @@ public class MtlMaterial implements j3dio.Exportable {
 	/**The string that will be used to reference this material.**/
 	private String name;
 	/**The ambient color of this material.**/
-	private Color ambient;
+	private FloatColor ambient;
 	/**The diffuse color of this material.**/
-	private Color diffuse;
+	private FloatColor diffuse;
 	/**The specular color of this material.**/
-	private Color specular;
+	private FloatColor specular;
 	/**The weighted specular coefficient.**/
 	private float wSpec;
 	/**
@@ -55,9 +56,9 @@ public class MtlMaterial implements j3dio.Exportable {
 	**/
 	private MtlMaterial(
 			String name,
-			Color ambient,
-			Color diffuse,
-			Color specular,
+			FloatColor ambient,
+			FloatColor diffuse,
+			FloatColor specular,
 			float weightedSpecularCoeff,
 			float transparency,
 			float refraction,
@@ -80,23 +81,28 @@ public class MtlMaterial implements j3dio.Exportable {
 	public static List<MtlMaterial> loadMtls(File file) throws IOException {
 		List<MtlMaterial> materials = new ArrayList<MtlMaterial>();
 		BufferedReader br = new BufferedReader(new FileReader(file));
+		String name = null;
+		FloatColor ambient = null;
+		FloatColor diffuse = null;
+		FloatColor specular = null;
+		float wSpec = 0;
+		float dissolve = 0;
+		float refraction = 1f;
+		boolean[] illuminationModels = new boolean[11];
 		String line;
 		boolean firstMtl = true;
 		
-		if (file.getPath().substring(file.getPath().lastIndexOf('.') + 1) != "mtl") {
+		if (!file.getPath().substring(file.getPath().lastIndexOf('.')).equals(".mtl")) {
 			throw new InvalidParameterException("File is not .mtl");
 		}
 		
 		while ((line = br.readLine()) != null) {
 			String[] splitStr = line.split("\\s");
-			String name = null;
-			Color ambient = null;
-			Color diffuse = null;
-			Color specular = null;
-			float wSpec = 0;
-			float dissolve = 0;
-			float refraction = 1f;
-			boolean[] illuminationModels = new boolean[11];
+			
+			//If line is empty
+			if (line.isEmpty()) {
+				continue;
+			}
 			
 			//If line is comment
 			if (line.trim().startsWith("#")) {
@@ -113,15 +119,15 @@ public class MtlMaterial implements j3dio.Exportable {
 				switch(splitStr[0]) {
 					//Ambient color
 					case "Ka":
-						ambient = new Color(r, g, b);
+						ambient = new FloatColor(r, g, b);
 						break;
 					//Diffuse color
 					case "Kd":
-						diffuse = new Color(r, g, b);
+						diffuse = new FloatColor(r, g, b);
 						break;
 					//Specular color
 					case "Ks":
-						specular = new Color(r, g, b);
+						specular = new FloatColor(r, g, b);
 						break;
 				}
 			} else if (splitStr[0].equals("Ns") || splitStr[0].equals("d") || splitStr[0].equals("Tr") || splitStr[0].equals("Ni")) {
@@ -186,6 +192,10 @@ public class MtlMaterial implements j3dio.Exportable {
 			}
 		}
 		
+		if (!firstMtl) {
+			materials.add(new MtlMaterial(name, ambient, diffuse, specular, wSpec, dissolve, refraction, illuminationModels));
+		}
+		
 		
 		br.close();
 		return materials;
@@ -194,13 +204,13 @@ public class MtlMaterial implements j3dio.Exportable {
 	public String getName() {
 		return name;
 	}
-	public Color getAmbientColor() {
+	public FloatColor getAmbientColor() {
 		return ambient;
 	}
-	public Color getDiffuseColor() {
+	public FloatColor getDiffuseColor() {
 		return diffuse;
 	}
-	public Color getSpecularColor() {
+	public FloatColor getSpecularColor() {
 		return specular;
 	}
 	public float getWeightedSpecularCoeff() {
@@ -215,7 +225,42 @@ public class MtlMaterial implements j3dio.Exportable {
 	public boolean[] getIlluminationModels() {
 		return illums;
 	}
-
+	
+	private String toFileString() {
+		StringBuilder sb = new StringBuilder();
+		
+		sb.append("newmtl " + name + '\n');
+		sb.append(
+			"Ka " + ambient.getRed()
+			+ ' ' + ambient.getGreen()
+			+ ' ' + ambient.getBlue()
+			+ '\n'
+		);
+		sb.append(
+			"Kd " + diffuse.getRed()
+			+ ' ' + diffuse.getGreen()
+			+ ' ' + diffuse.getBlue()
+			+ '\n'
+		);
+		sb.append(
+			"Ks " + specular.getRed()
+			+ ' ' + specular.getGreen()
+			+ ' ' + specular.getBlue()
+			+ '\n'
+		);
+		sb.append("Ns " + wSpec + '\n');
+		sb.append("d " + dissolve + '\n');
+		sb.append("Ni " + refraction + '\n');
+		for (int i = 0; i <= 10; i++) {
+			if (illums[i]) {
+				sb.append("illum " + i + '\n');
+			}
+		}
+		
+		
+		return sb.toString();
+	}
+	
 	@Override
 	public void export(String fileName) throws FileNotFoundException {
 		if (fileName.endsWith(".mtl")) {
@@ -224,28 +269,8 @@ public class MtlMaterial implements j3dio.Exportable {
 		
 		PrintWriter out = new PrintWriter(fileName + ".mtl");
 		
-		out.println("newmtl " + name);
-		out.println(
-			"Ka " + ambient.getRed() / 255f
-			+ ' ' + ambient.getGreen() / 255f
-			+ ' ' + ambient.getBlue() / 255f
-		);
-		out.println(
-			"Kd " + diffuse.getRed() / 255f
-			+ ' ' + diffuse.getGreen() / 255f
-			+ ' ' + diffuse.getBlue() / 255f
-		);
-		out.println(
-			"Ks " + diffuse.getRed() / 255f
-			+ ' ' + diffuse.getGreen() / 255f
-			+ ' ' + diffuse.getBlue() / 255f
-		);
-		out.println("Ns " + wSpec);
-		out.println("d " + dissolve / 255f);
-		out.println("Ni " + refraction);
-		out.println("illum " + illums);
+		out.print(toFileString());
 	}
-	
 	public static void exportGroup(String fileName, Collection<MtlMaterial> materials) throws FileNotFoundException {
 		if (fileName.endsWith(".mtl")) {
 			fileName = fileName.substring(0, fileName.length() - 4);
@@ -254,30 +279,7 @@ public class MtlMaterial implements j3dio.Exportable {
 		PrintWriter out = new PrintWriter(fileName + ".mtl");
 		
 		for (MtlMaterial mtl : materials) {
-			out.println("newmtl " + mtl.name);
-			out.println(
-				"Ka " + mtl.ambient.getRed() / 255f
-				+ ' ' + mtl.ambient.getGreen() / 255f
-				+ ' ' + mtl.ambient.getBlue() / 255f
-			);
-			out.println(
-				"Kd " + mtl.diffuse.getRed() / 255f
-				+ ' ' + mtl.diffuse.getGreen() / 255f
-				+ ' ' + mtl.diffuse.getBlue() / 255f
-			);
-			out.println(
-				"Ks " + mtl.diffuse.getRed() / 255f
-				+ ' ' + mtl.diffuse.getGreen() / 255f
-				+ ' ' + mtl.diffuse.getBlue() / 255f
-			);
-			out.println("Ns " + mtl.wSpec);
-			out.println("d " + mtl.dissolve / 255f);
-			out.println("Ni " + mtl.getIndexOfRefraction());
-			for (int i = 0; i <= 10; i++) {
-				if (mtl.getIlluminationModels()[i]) {
-					out.println("illum " + i);
-				}
-			}
+			out.print(mtl.toFileString());
 		}
 		
 		

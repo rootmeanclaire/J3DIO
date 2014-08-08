@@ -1,8 +1,9 @@
 package j3dio.obj;
 
+import j3dio.Definable;
 import j3dio.raw.RawFace;
 
-public class ObjFace extends RawFace {
+public class ObjFace extends RawFace implements Definable {
 	public int[] txtrIndxs;
 	public int[] normIndxs;
 	
@@ -19,6 +20,40 @@ public class ObjFace extends RawFace {
 			if (params[i].split("/").length > 2) {
 				normIndxs[i] = Integer.parseInt(params[i].split("/")[2]);
 			}
+		}
+	}
+	
+	@Override
+	public String toString() {
+		return Integer.toHexString(hashCode()) + "@\"" + toDefinition() + '"';
+	}
+	
+	@Override
+	public String toDefinition() {
+		if (hasTextures() && hasNorms()) {
+			StringBuilder sb = new StringBuilder("f");
+			for (int i = 0; i < size; i++) {
+				sb.append(" " + vertIndxs[i] + "/" + txtrIndxs + "/" + normIndxs);
+			}
+			return (sb.toString());
+		} else if (hasTextures()) {
+			StringBuilder sb = new StringBuilder("f");
+			for (int i = 0; i < size; i++) {
+				sb.append(" " + vertIndxs[i] + "/" + txtrIndxs);
+			}
+			return (sb.toString());
+		} else if (hasNorms()) {
+			StringBuilder sb = new StringBuilder("f");
+			for (int i = 0; i < size; i++) {
+				sb.append(" " + vertIndxs[i] + "//" + normIndxs);
+			}
+			return (sb.toString());
+		} else {
+			StringBuilder sb = new StringBuilder("f");
+			for (int i = 0; i < size; i++) {
+				sb.append(" " + vertIndxs[i]);
+			}
+			return (sb.toString());
 		}
 	}
 	

@@ -78,7 +78,7 @@ public class ObjModel implements j3dio.Exportable, j3dio.GLRenderable {
 		}
 		
 		while ((line = br.readLine()) != null) {
-			String[] splitStr = line.split("\\s");
+			String[] splitln = line.split("\\s+");
 			
 			//If line is comment
 			if (line.trim().startsWith("#")) {
@@ -87,19 +87,19 @@ public class ObjModel implements j3dio.Exportable, j3dio.GLRenderable {
 			}
 			
 			//If line's arguments is three floats
-			if (splitStr[0].equals("v") || splitStr[0].equals("vn") || splitStr[0].equals("vp")) {
-				float x = Float.parseFloat(splitStr[1]);
-				float y = Float.parseFloat(splitStr[2]);
-				float z = Float.parseFloat(splitStr[3]);
+			if (splitln[0].equals("v") || splitln[0].equals("vn") || splitln[0].equals("vp")) {
+				float x = Float.parseFloat(splitln[1]);
+				float y = Float.parseFloat(splitln[2]);
+				float z = Float.parseFloat(splitln[3]);
 				
-				switch(splitStr[0]) {
+				switch(splitln[0]) {
 					//Vertex
 					case "v":
 						if (currMtlName == null) {
 							verts.add(new Point3f(x, y, z));
 						} else {
 							verts.add(new MtlPoint3f(x, y, z, mtls.get(currMtlName)));
-							currMtlName = null;
+							
 						}
 						break;
 					//Vertex normal
@@ -112,32 +112,40 @@ public class ObjModel implements j3dio.Exportable, j3dio.GLRenderable {
 						break;
 				}
 			} else {
-				switch (splitStr[0]) {
+				switch (splitln[0]) {
 					//Texture coordinate
 					case "vt":
-						txtrs.add(new UV(Float.parseFloat(splitStr[1]), Float.parseFloat(splitStr[2])));
+						txtrs.add(new UV(Float.parseFloat(splitln[1]), Float.parseFloat(splitln[2])));
 						break;
 					//Face
 					case "f":
-						faces.add(new ObjFace(Arrays.copyOfRange(splitStr, 1, splitStr.length)));
+						faces.add(new ObjFace(Arrays.copyOfRange(splitln, 1, splitln.length)));
 						
 						if (currMtlName != null) {
 							for (int i : faces.get(faces.size() - 1).vertIndxs) {
 								verts.set(i, new MtlPoint3f(verts.get(i), mtls.get(currMtlName)));
 							}
-							currMtlName = null;
+							
 						}
 						break;
 					//Load material file
 					case "mtllib":
-						List<MtlMaterial> materials = MtlMaterial.loadMtls(new File(splitStr[1]));
+						List<MtlMaterial> materials = MtlMaterial.loadMtls(
+							new File(
+								file.getPath().substring(
+									0,
+									file.getPath().length() - file.getName().length()
+								)
+								+ splitln[1]
+							)
+						);
 						for (MtlMaterial mtl : materials) {
 							mtls.put(mtl.getName(), mtl);
 						}
 						break;
 					//Use material by name
 					case "usemtl":
-						currMtlName = splitStr[1];
+						currMtlName = splitln[1];
 						break;
 					//Define object name
 					case "o":
@@ -149,10 +157,10 @@ public class ObjModel implements j3dio.Exportable, j3dio.GLRenderable {
 						break;
 					//Smoothing groups
 					case "s":
-						if (splitStr[1] == "off") {
+						if (splitln[1].equals("off")) {
 							//TODO
 						} else {
-							Integer.parseInt(splitStr[1]);
+							Integer.parseInt(splitln[1]);
 							//TODO
 						}
 						break;
@@ -197,8 +205,7 @@ public class ObjModel implements j3dio.Exportable, j3dio.GLRenderable {
 	public Map<String, MtlMaterial> getMaterials() {
 		return mtls;
 	}
-
-
+	
 	@Override
 	public void export(String fileName) throws FileNotFoundException {
 		if (fileName.endsWith(".obj") || fileName.endsWith(".mtl")) {
@@ -227,31 +234,7 @@ public class ObjModel implements j3dio.Exportable, j3dio.GLRenderable {
 				out.println("vp " + paramSv.x + ' ' + paramSv.y + ' ' + paramSv.z);
 			}
 			for (ObjFace face : faces) {
-				if (face.hasTextures() && face.hasNorms()) {
-					StringBuilder sb = new StringBuilder("f");
-					for (int i = 0; i < face.size; i++) {
-						sb.append(" " + face.vertIndxs[i] + "/" + face.txtrIndxs + "/" + face.normIndxs);
-					}
-					out.println(sb.toString());
-				} else if (face.hasTextures()) {
-					StringBuilder sb = new StringBuilder("f");
-					for (int i = 0; i < face.size; i++) {
-						sb.append(" " + face.vertIndxs[i] + "/" + face.txtrIndxs);
-					}
-					out.println(sb.toString());
-				} else if (face.hasNorms()) {
-					StringBuilder sb = new StringBuilder("f");
-					for (int i = 0; i < face.size; i++) {
-						sb.append(" " + face.vertIndxs[i] + "//" + face.normIndxs);
-					}
-					out.println(sb.toString());
-				} else {
-					StringBuilder sb = new StringBuilder("f");
-					for (int i = 0; i < face.size; i++) {
-						sb.append(" " + face.vertIndxs[i]);
-					}
-					out.println(sb.toString());
-				}
+				out.println(face.toDefinition());
 			}
 		}
 		
