@@ -45,26 +45,6 @@ File type support
 **Import/Export:** Colors not supported  
 **Render:** Colors not supported
 
-####`.fbx`####
-**Import/Export:** N/A  
-**Render:** N/A
-
-####`.x`####
-**Import/Export:** N/A  
-**Render:** N/A
-
-####`.dae`####
-**Import/Export:** N/A  
-**Render:** N/A
-
-####`.ms3d`####
-**Import/Export:** N/A  
-**Render:** N/A
-
-####`.3ds`####
-**Import/Export:** N/A  
-**Render:** N/A
-
  [1]: https://github.com/FracturedRetina/J3DIO/releases/download/v4.0-beta/jml_v4.0-beta_jre7.jar
  [2]: https://github.com/FracturedRetina/J3DIO/fork
  [3]: https://github.com/FracturedRetina/J3DIO/wiki/File-Type-Resources
