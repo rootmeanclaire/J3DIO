@@ -123,7 +123,7 @@ public class ObjModel implements j3dio.Exportable, j3dio.GLRenderable {
 						
 						if (currMtlName != null) {
 							for (int i : faces.get(faces.size() - 1).vertIndxs) {
-								verts.set(i, new MtlPoint3f(verts.get(i), mtls.get(currMtlName)));
+								verts.set(i - 1, new MtlPoint3f(verts.get(i - 1), mtls.get(currMtlName)));
 							}
 							
 						}
