@@ -1,5 +1,13 @@
 Beta
 ====
+4.1.3
+-----
+ * Fixed `.mtl` render bug
+
+4.1.2
+-----
+ * Fixed `.obj` render bug
+
 4.1.1
 -----
  * Fixed `.mtl` loader
