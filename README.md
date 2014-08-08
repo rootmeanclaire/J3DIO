@@ -1,11 +1,15 @@
 J3DIO
 ======
-Java 3D Input Output, or J3DIO(say "jedio"), is a file IO system for 3D models.  
+Java 3D Input Output, or J3DIO(say "jed-ee-oh"), is a file IO system for 3D models.  
 
 
 Download
 --------
 Click [here][1] to download the latest version of J3DIO for Java 7
+
+Contribute
+----------
+Feel free to [fork this repository][https://github.com/FracturedRetina/J3DIO/fork]. If you want information about a certain file type's specifications, I've been compiling a [list][2] on the wiki, which you are more than welcome to add to with your own findings.
 
 What's new
 ----------
@@ -62,3 +66,4 @@ File type support
 **Render:** N/A
 
  [1]: https://github.com/FracturedRetina/J3DIO/releases/download/v4.0-beta/jml_v4.0-beta_jre7.jar
+ [2]: https://github.com/FracturedRetina/J3DIO/wiki/File-Type-Resources
