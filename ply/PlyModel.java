@@ -1,8 +1,10 @@
 package j3dio.ply;
 
 import j3dio.Exportable;
+import j3dio.GLRenderable;
 import j3dio.ply.Element.Datatype;
 import j3dio.ply.Element.ListType;
+import j3dio.ply.element.PlyVertex;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -16,8 +18,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-
-public class PlyModel implements Exportable {
+public class PlyModel implements Exportable, GLRenderable {
 	public enum Format {ASCII, BIN_LITTLE_ENDIAN, BIN_BIG_ENDIAN}
 	private Map<Element, Integer> elements = new HashMap<Element, Integer>();
 	private List<ElementInstance> data = new ArrayList<ElementInstance>();
@@ -151,5 +152,52 @@ public class PlyModel implements Exportable {
 		}
 		
 		out.close();
+	}
+	
+	/**
+	 * <b>DEPRECATED</b> use <code>glrender()</code> instead
+	 * <br />
+	 * Draw this object using GL11
+	**/
+	@Deprecated
+	@Override
+	public void render() {
+		glrender();
+	}
+	
+	/**Draw this object using GL11**/
+	@SuppressWarnings("unchecked")
+	@Override
+	public void glrender() {
+		boolean hasFaces = false;
+		boolean hasVerts = false;
+		
+		for (Element e : elements.keySet()) {
+			if (e.name.equals("vertex")) {
+				hasVerts = true;
+			} else if (e.name.equals("face")) {
+				hasFaces = true;
+			}
+		}
+		
+		if (hasFaces && hasVerts) {
+			for (ElementInstance ei : data) {
+				if (ei.tyepname.equals("face")) {
+					List<Integer> vertexIndices = (List<Integer>) ei.get("vertex_indices");
+					
+					for (Integer i : vertexIndices) {
+						(new PlyVertex(data.get(i))).glrender();
+					}
+				}
+			}
+		} else if (hasVerts) {
+			for (ElementInstance ei : data) {
+				if (ei.tyepname.equals("vertex")) {
+					(new PlyVertex(ei)).glrender();
+				}
+			}
+		} else {
+			//TODO
+		}
 	}
 }

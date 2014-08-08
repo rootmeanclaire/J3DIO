@@ -1,9 +1,22 @@
 Beta
 ====
+4.2
+-----
+ * OpenGL render support for `.ply` models
+ * Internal improvements in `.ply` file processing
+
+4.1.3
+-----
+ * Fixed `.mtl` render bug
+
+4.1.2
+-----
+ * Fixed `.obj` render bug
+
 4.1.1
 -----
  * Fixed `.mtl` loader
- * Creted `Definable`
+ * Created `Definable`
  * Changed how colors are stored in `MtlModel`s
 
 4.1
