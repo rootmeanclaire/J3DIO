@@ -56,7 +56,7 @@ Contributors
 ------------
  * Evan Shimoniak
 
- [1]: https://github.com/FracturedRetina/J3DIO/releases/download/v4.2-beta/j3dio_v4.2-beta.jar
+ [1]: https://github.com/FracturedRetina/J3DIO/releases/download/v4.2-beta/j3dio_v4.2-beta_jre7.jar
  [2]: https://github.com/FracturedRetina/J3DIO/fork
  [3]: https://github.com/FracturedRetina/J3DIO/wiki/File-Type-Resources
  [4]: https://github.com/FracturedRetina/J3DIO/issues
