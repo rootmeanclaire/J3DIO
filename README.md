@@ -14,8 +14,8 @@ If you'd like to bring something to the attention of the developers, whether an 
 
 Help
 ----
- * Wiki
- * Javadoc
+ * [Wiki][5]
+ * [Javadoc][6]
  * [Website][7]
 
 What's new
