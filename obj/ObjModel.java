@@ -1,11 +1,5 @@
 package j3dio.obj;
 
-import static org.lwjgl.opengl.GL11.GL_LINE_LOOP;
-import static org.lwjgl.opengl.GL11.glBegin;
-import static org.lwjgl.opengl.GL11.glEnd;
-import static org.lwjgl.opengl.GL11.glNormal3f;
-import static org.lwjgl.opengl.GL11.glTexCoord3f;
-import static org.lwjgl.opengl.GL11.glVertex3f;
 import j3dio.Point3f;
 import j3dio.UV;
 
@@ -22,7 +16,11 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class ObjModel implements j3dio.Exportable, j3dio.GLRenderable {
+import javax.media.opengl.GL2;
+
+import org.lwjgl.opengl.GL11;
+
+public class ObjModel implements j3dio.Exportable, j3dio.LWJGLRenderable, j3dio.JOGLRenderable {
 	/**A {@link List} of the vertices in this model.**/
 	private List<Point3f> verts = new ArrayList<Point3f>();
 	/**A {@link List} of the texture coordinates(UV's) in this model.**/
@@ -242,37 +240,48 @@ public class ObjModel implements j3dio.Exportable, j3dio.GLRenderable {
 		out.close();
 	}
 	
-	/**
-	 * <b>DEPRECATED</b> use <code>glrender()</code> instead
-	 * <br />
-	 * Does not support parameter space vertices or .mtl materials
-	**/
-	@Deprecated
 	@Override
-	public void render() {
-		glrender();
+	public void joglrender(GL2 gl) {
+		for (ObjFace face : faces) {
+			gl.glBegin(GL2.GL_LINE_LOOP);
+				for (int i = 0; i < face.size; i++) {
+					if (face.hasNorms()) {
+						Point3f norm = norms.get(face.normIndxs[i] - 1);
+						gl.glNormal3f(norm.x, norm.y, norm.z);
+					}
+					if (face.hasTextures()) {
+						Point3f txtr = norms.get(face.txtrIndxs[i] - 1);
+						gl.glTexCoord3f(txtr.x, txtr.y, txtr.z);
+					}
+					{
+						Point3f vert = verts.get(face.vertIndxs[i] - 1);
+						gl.glVertex3f(vert.x, vert.y, vert.z);
+					}
+				}
+			gl.glEnd();
+		}
 	}
 	
 	/**Does not support parameter space vertices or .mtl materials**/
 	@Override
-	public void glrender() {
+	public void lwjglrender() {
 		for (ObjFace face : faces) {
-			glBegin(GL_LINE_LOOP);
+			GL11.glBegin(GL11.GL_LINE_LOOP);
 				for (int i = 0; i < face.size; i++) {
 					if (face.hasNorms()) {
 						Point3f norm = norms.get(face.normIndxs[i] - 1);
-						glNormal3f(norm.x, norm.y, norm.z);
+						GL11.glNormal3f(norm.x, norm.y, norm.z);
 					}
 					if (face.hasTextures()) {
 						Point3f txtr = norms.get(face.txtrIndxs[i] - 1);
-						glTexCoord3f(txtr.x, txtr.y, txtr.z);
+						GL11.glTexCoord3f(txtr.x, txtr.y, txtr.z);
 					}
 					{
 						Point3f vert = verts.get(face.vertIndxs[i] - 1);
-						glVertex3f(vert.x, vert.y, vert.z);
+						GL11.glVertex3f(vert.x, vert.y, vert.z);
 					}
 				}
-			glEnd();
+			GL11.glEnd();
 		}
 	}
 }

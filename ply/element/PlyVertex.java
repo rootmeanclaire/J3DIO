@@ -1,14 +1,15 @@
 package j3dio.ply.element;
 
-import static org.lwjgl.opengl.GL11.glVertex3f;
-import static org.lwjgl.opengl.GL11.glNormal3f;
-import j3dio.GLRenderable;
 import j3dio.Point3f;
 import j3dio.ply.ElementInstance;
 
 import java.security.InvalidParameterException;
 
-public class PlyVertex implements GLRenderable {
+import javax.media.opengl.GL2;
+
+import org.lwjgl.opengl.GL11;
+
+public class PlyVertex implements j3dio.LWJGLRenderable, j3dio.JOGLRenderable {
 	public Point3f position = null;
 	public Point3f normal = null;
 	
@@ -30,23 +31,20 @@ public class PlyVertex implements GLRenderable {
 		}
 	}
 	
-
-	/**
-	 * <b>DEPRECATED</b> use <code>glrender()</code> instead
-	 * <br />
-	 * Draw this object using GL11
-	**/
-	@Deprecated
 	@Override
-	public void render() {
-		glrender();
+	public void joglrender(GL2 gl) {
+		if (normal != null) {
+			gl.glNormal3f(normal.x, normal.y, normal.z);
+		}
+		gl.glVertex3f(position.x, position.y, position.z);
 	}
+	
 	/**Draw this object using GL11**/
 	@Override
-	public void glrender() {
+	public void lwjglrender() {
 		if (normal != null) {
-			glNormal3f(normal.x, normal.y, normal.z);
+			GL11.glNormal3f(normal.x, normal.y, normal.z);
 		}
-		glVertex3f(position.x, position.y, position.z);
+		GL11.glVertex3f(position.x, position.y, position.z);
 	}
 }

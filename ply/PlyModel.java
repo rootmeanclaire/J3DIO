@@ -1,7 +1,5 @@
 package j3dio.ply;
 
-import j3dio.Exportable;
-import j3dio.GLRenderable;
 import j3dio.ply.Element.Datatype;
 import j3dio.ply.Element.ListType;
 import j3dio.ply.element.PlyVertex;
@@ -18,7 +16,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class PlyModel implements Exportable, GLRenderable {
+import javax.media.opengl.GL2;
+
+public class PlyModel implements j3dio.Exportable, j3dio.LWJGLRenderable, j3dio.JOGLRenderable {
 	public enum Format {ASCII, BIN_LITTLE_ENDIAN, BIN_BIG_ENDIAN}
 	private Map<Element, Integer> elements = new HashMap<Element, Integer>();
 	private List<ElementInstance> data = new ArrayList<ElementInstance>();
@@ -154,21 +154,9 @@ public class PlyModel implements Exportable, GLRenderable {
 		out.close();
 	}
 	
-	/**
-	 * <b>DEPRECATED</b> use <code>glrender()</code> instead
-	 * <br />
-	 * Draw this object using GL11
-	**/
-	@Deprecated
-	@Override
-	public void render() {
-		glrender();
-	}
-	
-	/**Draw this object using GL11**/
 	@SuppressWarnings("unchecked")
 	@Override
-	public void glrender() {
+	public void joglrender(GL2 gl) {
 		boolean hasFaces = false;
 		boolean hasVerts = false;
 		
@@ -186,14 +174,50 @@ public class PlyModel implements Exportable, GLRenderable {
 					List<Integer> vertexIndices = (List<Integer>) ei.get("vertex_indices");
 					
 					for (Integer i : vertexIndices) {
-						(new PlyVertex(data.get(i))).glrender();
+						(new PlyVertex(data.get(i))).joglrender(gl);
 					}
 				}
 			}
 		} else if (hasVerts) {
 			for (ElementInstance ei : data) {
 				if (ei.tyepname.equals("vertex")) {
-					(new PlyVertex(ei)).glrender();
+					(new PlyVertex(ei)).joglrender(gl);
+				}
+			}
+		} else {
+			//TODO
+		}
+	}
+	
+	/**Draw this object using GL11**/
+	@SuppressWarnings("unchecked")
+	@Override
+	public void lwjglrender() {
+		boolean hasFaces = false;
+		boolean hasVerts = false;
+		
+		for (Element e : elements.keySet()) {
+			if (e.name.equals("vertex")) {
+				hasVerts = true;
+			} else if (e.name.equals("face")) {
+				hasFaces = true;
+			}
+		}
+		
+		if (hasFaces && hasVerts) {
+			for (ElementInstance ei : data) {
+				if (ei.tyepname.equals("face")) {
+					List<Integer> vertexIndices = (List<Integer>) ei.get("vertex_indices");
+					
+					for (Integer i : vertexIndices) {
+						(new PlyVertex(data.get(i))).lwjglrender();
+					}
+				}
+			}
+		} else if (hasVerts) {
+			for (ElementInstance ei : data) {
+				if (ei.tyepname.equals("vertex")) {
+					(new PlyVertex(ei)).lwjglrender();
 				}
 			}
 		} else {

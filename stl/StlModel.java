@@ -1,8 +1,5 @@
 package j3dio.stl;
 
-import j3dio.Byteable;
-import j3dio.Exportable;
-import j3dio.GLRenderable;
 import j3dio.Point3f;
 
 import java.io.BufferedReader;
@@ -21,9 +18,11 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import static org.lwjgl.opengl.GL11.*;
+import javax.media.opengl.GL2;
 
-public class StlModel implements Exportable, Byteable, GLRenderable {
+import org.lwjgl.opengl.GL11;
+
+public class StlModel implements j3dio.Exportable, j3dio.Byteable, j3dio.LWJGLRenderable, j3dio.JOGLRenderable {
 	public final String header;
 	private List<FaceT> faces = new ArrayList<FaceT>();
 	
@@ -222,21 +221,25 @@ public class StlModel implements Exportable, Byteable, GLRenderable {
 		return 80 + faces.size() * faces.get(0).getByteSize();
 	}
 	
-	/**<b>DEPRECATED</b> use <code>glrender()</code> instead**/
-	@Deprecated
 	@Override
-	public void render() {
-		glrender();
+	public void joglrender(GL2 gl) {
+		for (FaceT face : faces) {
+			gl.glBegin(GL2.GL_TRIANGLES);
+				gl.glVertex3f(face.vert1.x, face.vert1.y, face.vert1.z);
+				gl.glVertex3f(face.vert2.x, face.vert2.y, face.vert2.z);
+				gl.glVertex3f(face.vert3.x, face.vert3.y, face.vert3.z);
+			gl.glEnd();
+		}
 	}
 	
 	@Override
-	public void glrender() {
+	public void lwjglrender() {
 		for (FaceT face : faces) {
-			glBegin(GL_TRIANGLES);
-				glVertex3f(face.vert1.x, face.vert1.y, face.vert1.z);
-				glVertex3f(face.vert2.x, face.vert2.y, face.vert2.z);
-				glVertex3f(face.vert3.x, face.vert3.y, face.vert3.z);
-			glEnd();
+			GL11.glBegin(GL11.GL_TRIANGLES);
+				GL11.glVertex3f(face.vert1.x, face.vert1.y, face.vert1.z);
+				GL11.glVertex3f(face.vert2.x, face.vert2.y, face.vert2.z);
+				GL11.glVertex3f(face.vert3.x, face.vert3.y, face.vert3.z);
+			GL11.glEnd();
 		}
 	}
 }

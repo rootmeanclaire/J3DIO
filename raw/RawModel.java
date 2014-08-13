@@ -14,10 +14,12 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import javax.media.opengl.GL2;
 
-import static org.lwjgl.opengl.GL11.*;
+import org.lwjgl.opengl.GL11;
 
-public class RawModel implements j3dio.Exportable, j3dio.GLRenderable {
+
+public class RawModel implements j3dio.Exportable, j3dio.LWJGLRenderable, j3dio.JOGLRenderable {
 	/**A {@link List} of the vertices in this model.**/
 	private List<Point3f> verts = new ArrayList<Point3f>();
 	/**A {@link List} of the faces in this model. Faces link together vertices**/
@@ -120,22 +122,27 @@ public class RawModel implements j3dio.Exportable, j3dio.GLRenderable {
 		out.close();
 	}
 	
-	/**<b>DEPRECATED</b> use <code>glrender()</code> instead**/
-	@Deprecated
 	@Override
-	public void render() {
-		glrender();
+	public void joglrender(GL2 gl) {
+		for (RawFace face : faces) {
+			gl.glBegin(GL2.GL_LINE_LOOP);
+				for (int i : face.vertIndxs) {
+					Point3f vert = verts.get(i);
+					gl.glVertex3f(vert.x, vert.y, vert.z);
+				}
+			gl.glEnd();
+		}
 	}
 
 	@Override
-	public void glrender() {
+	public void lwjglrender() {
 		for (RawFace face : faces) {
-			glBegin(GL_LINE_LOOP);
+			GL11.glBegin(GL11.GL_LINE_LOOP);
 				for (int i : face.vertIndxs) {
 					Point3f vert = verts.get(i);
-					glVertex3f(vert.x, vert.y, vert.z);
+					GL11.glVertex3f(vert.x, vert.y, vert.z);
 				}
-			glEnd();
+			GL11.glEnd();
 		}
 	}
 }
