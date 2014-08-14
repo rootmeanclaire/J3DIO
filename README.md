@@ -20,9 +20,7 @@ Help
 
 What's new
 ----------
- * Fixed `.mtl` loader
- * Creted `Definable`
- * Changed how colors are stored in `MtlModel`s
+ * JOGL render support
 
 File type support
 -----------------
