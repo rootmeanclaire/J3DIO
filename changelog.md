@@ -1,5 +1,9 @@
 Beta
 ====
+4.3
+---
+ * Added JOGL render support
+
 4.2
 -----
  * OpenGL render support for `.ply` models
