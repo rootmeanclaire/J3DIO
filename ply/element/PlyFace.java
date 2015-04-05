@@ -6,6 +6,10 @@ import java.security.InvalidParameterException;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * @author Evan Shimoniak
+ * @since 4.2
+**/
 public class PlyFace {
 	List<Integer> vertexIndices = new ArrayList<Integer>();
 	

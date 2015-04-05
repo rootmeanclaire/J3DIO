@@ -5,10 +5,14 @@ import j3dio.ply.ElementInstance;
 
 import java.security.InvalidParameterException;
 
-import javax.media.opengl.GL2;
-
 import org.lwjgl.opengl.GL11;
 
+import com.jogamp.opengl.GL2;
+
+/**
+ * @author Evan Shimoniak
+ * @since 4.2
+**/
 public class PlyVertex implements j3dio.LWJGLRenderable, j3dio.JOGLRenderable {
 	public Point3f position = null;
 	public Point3f normal = null;

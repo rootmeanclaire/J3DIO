@@ -1,6 +1,6 @@
 J3DIO
 ======
-Java 3D Input Output, or J3DIO(say "jed-ee-oh"), is a file IO system for 3D models. This is a personal project, but I think that this libray might be useful to someone.
+Java 3D Input Output, or J3DIO(say "jeh-dee-oh"), is a file IO system for 3D models. This is a personal project, but I think that this libray might be useful to someone.
 
 Installation
 ------------
@@ -20,7 +20,7 @@ Help
 
 What's new
 ----------
- * JOGL render support
+ * `.dae` file support
 
 File type support
 -----------------
@@ -31,7 +31,7 @@ File type support
 |   .raw    | Yes     | Yes     | Yes     |
 |   .ply    | Partial | Partial | Partial |
 |   .stl    | Partial | Partial | Partial |
-|   .dae    | No      | No      | No      |
+|   .dae    | Partial | Partial | Partial |
 |   .fbx    | No      | No      | No      |
 
 ####`.obj` and `.mtl`####
@@ -49,6 +49,10 @@ File type support
 ####`.stl`####
 **Import/Export:** Colors not supported  
 **Render:** Colors not supported
+
+####`.dae`####
+**Import/Export:** Only vertices and normals are supported  
+**Render:** Only vertices and normals are supported
 
 Contributors
 ------------

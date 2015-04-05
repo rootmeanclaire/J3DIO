@@ -18,14 +18,22 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import javax.media.opengl.GL2;
-
 import org.lwjgl.opengl.GL11;
 
+import com.jogamp.opengl.GL2;
+
+/**
+ * @author Evan Shimoniak
+ * @since 4.0
+**/
 public class StlModel implements j3dio.Exportable, j3dio.Byteable, j3dio.LWJGLRenderable, j3dio.JOGLRenderable {
 	public final String header;
 	private List<FaceT> faces = new ArrayList<FaceT>();
 	
+	/**
+	 * @param file The file to be loaded
+	 * @throws IOException
+	**/
 	public StlModel(File file) throws IOException {
 		BufferedReader br = new BufferedReader(new FileReader(file));
 		String line;
@@ -224,7 +232,7 @@ public class StlModel implements j3dio.Exportable, j3dio.Byteable, j3dio.LWJGLRe
 	@Override
 	public void joglrender(GL2 gl) {
 		for (FaceT face : faces) {
-			gl.glBegin(GL2.GL_TRIANGLES);
+			gl.glBegin(GL2.GL_TRIANGLE_STRIP);
 				gl.glVertex3f(face.vert1.x, face.vert1.y, face.vert1.z);
 				gl.glVertex3f(face.vert2.x, face.vert2.y, face.vert2.z);
 				gl.glVertex3f(face.vert3.x, face.vert3.y, face.vert3.z);

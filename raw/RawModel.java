@@ -14,17 +14,24 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import javax.media.opengl.GL2;
-
 import org.lwjgl.opengl.GL11;
 
+import com.jogamp.opengl.GL2;
 
+/**
+ * @author Evan Shimoniak
+ * @since 2.0
+**/
 public class RawModel implements j3dio.Exportable, j3dio.LWJGLRenderable, j3dio.JOGLRenderable {
 	/**A {@link List} of the vertices in this model.**/
 	private List<Point3f> verts = new ArrayList<Point3f>();
 	/**A {@link List} of the faces in this model. Faces link together vertices**/
 	private List<RawFace> faces = new ArrayList<RawFace>();
 	
+	/**
+	 * @param file The file to be loaded
+	 * @throws IOException
+	**/
 	public RawModel(File file) throws IOException {
 		BufferedReader br = new BufferedReader(new FileReader(file));
 		//Local variable to store the current line
@@ -125,7 +132,7 @@ public class RawModel implements j3dio.Exportable, j3dio.LWJGLRenderable, j3dio.
 	@Override
 	public void joglrender(GL2 gl) {
 		for (RawFace face : faces) {
-			gl.glBegin(GL2.GL_LINE_LOOP);
+			gl.glBegin(GL2.GL_POLYGON);
 				for (int i : face.vertIndxs) {
 					Point3f vert = verts.get(i);
 					gl.glVertex3f(vert.x, vert.y, vert.z);
@@ -137,7 +144,7 @@ public class RawModel implements j3dio.Exportable, j3dio.LWJGLRenderable, j3dio.
 	@Override
 	public void lwjglrender() {
 		for (RawFace face : faces) {
-			GL11.glBegin(GL11.GL_LINE_LOOP);
+			GL11.glBegin(GL11.GL_POLYGON);
 				for (int i : face.vertIndxs) {
 					Point3f vert = verts.get(i);
 					GL11.glVertex3f(vert.x, vert.y, vert.z);

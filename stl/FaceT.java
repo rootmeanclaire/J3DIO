@@ -5,6 +5,10 @@ import java.nio.ByteBuffer;
 import j3dio.Byteable;
 import j3dio.Point3f;
 
+/**
+ * @author Evan Shimoniak
+ * @since 4.0
+**/
 public class FaceT implements Byteable {
 	public Point3f normal = new Point3f();
 	public Point3f vert1 = null;

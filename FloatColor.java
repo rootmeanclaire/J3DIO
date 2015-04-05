@@ -2,6 +2,10 @@ package j3dio;
 
 import java.awt.Color;
 
+/**
+ * @author Evan Shimoniak
+ * @since 4.1.1 beta
+**/
 public class FloatColor {
 	private float r, g, b;
 	
@@ -26,6 +30,7 @@ public class FloatColor {
 		return b;
 	}
 	
+	/**@return A representation of this as a standard {@link java.awt.Color}**/
 	public Color toColor() {
 		return new Color(r, g, b);
 	}

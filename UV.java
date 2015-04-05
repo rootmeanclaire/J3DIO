@@ -1,6 +1,10 @@
 package j3dio;
 
-/**Texture coordinate**/
+/**
+ * Texture coordinate
+ * @author Evan Shimoniak
+ * @since 4.1 beta
+**/
 public class UV {
 	public float u;
 	public float v;

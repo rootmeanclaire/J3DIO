@@ -3,8 +3,14 @@ package j3dio.obj;
 import j3dio.Definable;
 import j3dio.raw.RawFace;
 
+/**
+ * @author Evan Shimoniak
+ * @since 1.0 beta
+**/
 public class ObjFace extends RawFace implements Definable {
+	/**Texture indices**/
 	public int[] txtrIndxs;
+	/**Normal indices**/
 	public int[] normIndxs;
 	
 	public ObjFace(String[] params) {
@@ -14,10 +20,10 @@ public class ObjFace extends RawFace implements Definable {
 		
 		for (int i = 0; i < params.length; i++) {
 			vertIndxs[i] = Integer.parseInt(params[i].split("/")[0]);
-			if (params[i].split("/").length > 1) {
+			if (params[i].split("/").length > 1 && params[i].split("/")[1] == "") {
 				txtrIndxs[i] = Integer.parseInt(params[i].split("/")[1]);
 			}
-			if (params[i].split("/").length > 2) {
+			if (params[i].split("/").length > 2 && params[i].split("/")[2] == "") {
 				normIndxs[i] = Integer.parseInt(params[i].split("/")[2]);
 			}
 		}
@@ -66,7 +72,13 @@ public class ObjFace extends RawFace implements Definable {
 		
 		return false;
 	}
+	/**Renamed to hasNormals()**/
+	@Deprecated
 	public boolean hasNorms() {
+		return hasNormals();
+	}
+	
+	public boolean hasNormals() {
 		for (int i : normIndxs) {
 			if (i != 0) {
 				return true;

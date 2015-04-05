@@ -16,13 +16,21 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import javax.media.opengl.GL2;
+import com.jogamp.opengl.GL2;
 
+/**
+ * @author Evan Shimoniak
+ * @since 3.0
+**/
 public class PlyModel implements j3dio.Exportable, j3dio.LWJGLRenderable, j3dio.JOGLRenderable {
 	public enum Format {ASCII, BIN_LITTLE_ENDIAN, BIN_BIG_ENDIAN}
 	private Map<Element, Integer> elements = new HashMap<Element, Integer>();
 	private List<ElementInstance> data = new ArrayList<ElementInstance>();
 	
+	/**
+	 * @param file The file to be loaded
+	 * @throws IOException
+	**/
 	public PlyModel(File file) throws IOException {
 		BufferedReader br = new BufferedReader(new FileReader(file));
 		String line;

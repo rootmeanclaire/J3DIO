@@ -13,7 +13,11 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
-public class MtlMaterial implements j3dio.Exportable {
+/**
+ * @author Evan Shimoniak
+ * @since 2.0 beta
+**/
+public class MtlMaterial implements j3dio.Exportable, j3dio.Definable {
 	/**The string that will be used to reference this material.**/
 	private String name;
 	/**The ambient color of this material.**/
@@ -226,7 +230,8 @@ public class MtlMaterial implements j3dio.Exportable {
 		return illums;
 	}
 	
-	private String toFileString() {
+	@Override
+	public String toDefinition() {
 		StringBuilder sb = new StringBuilder();
 		
 		sb.append("newmtl " + name + '\n');
@@ -269,7 +274,7 @@ public class MtlMaterial implements j3dio.Exportable {
 		
 		PrintWriter out = new PrintWriter(fileName + ".mtl");
 		
-		out.print(toFileString());
+		out.print(toDefinition());
 	}
 	public static void exportGroup(String fileName, Collection<MtlMaterial> materials) throws FileNotFoundException {
 		if (fileName.endsWith(".mtl")) {
@@ -279,7 +284,7 @@ public class MtlMaterial implements j3dio.Exportable {
 		PrintWriter out = new PrintWriter(fileName + ".mtl");
 		
 		for (MtlMaterial mtl : materials) {
-			out.print(mtl.toFileString());
+			out.print(mtl.toDefinition());
 		}
 		
 		

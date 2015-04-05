@@ -23,6 +23,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * @author Evan Shimoniak
+ * @since 3.0
+**/
 public class ElementInstance {
 	public final String tyepname;
 	/**

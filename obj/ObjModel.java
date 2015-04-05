@@ -16,10 +16,14 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import javax.media.opengl.GL2;
-
 import org.lwjgl.opengl.GL11;
 
+import com.jogamp.opengl.GL2;
+
+/**
+ * @author Evan Shimoniak
+ * @since 1.0 beta
+**/
 public class ObjModel implements j3dio.Exportable, j3dio.LWJGLRenderable, j3dio.JOGLRenderable {
 	/**A {@link List} of the vertices in this model.**/
 	private List<Point3f> verts = new ArrayList<Point3f>();
@@ -66,6 +70,10 @@ public class ObjModel implements j3dio.Exportable, j3dio.LWJGLRenderable, j3dio.
 		this.mtls = materials;
 	}
 	
+	/**
+	 * @param file The file to be loaded
+	 * @throws IOException
+	**/
 	public ObjModel(File file) throws IOException {
 		BufferedReader br = new BufferedReader(new FileReader(file));
 		String line;
@@ -77,6 +85,11 @@ public class ObjModel implements j3dio.Exportable, j3dio.LWJGLRenderable, j3dio.
 		
 		while ((line = br.readLine()) != null) {
 			String[] splitln = line.split("\\s+");
+			
+			//If line is empty
+			if (splitln.length == 0) {
+				continue;
+			}
 			
 			//If line is comment
 			if (line.trim().startsWith("#")) {
@@ -239,13 +252,14 @@ public class ObjModel implements j3dio.Exportable, j3dio.LWJGLRenderable, j3dio.
 		
 		out.close();
 	}
-	
+
+	/**Does not support parameter space vertices or .mtl materials**/
 	@Override
 	public void joglrender(GL2 gl) {
 		for (ObjFace face : faces) {
-			gl.glBegin(GL2.GL_LINE_LOOP);
+			gl.glBegin(GL2.GL_POLYGON);
 				for (int i = 0; i < face.size; i++) {
-					if (face.hasNorms()) {
+					if (face.hasNormals()) {
 						Point3f norm = norms.get(face.normIndxs[i] - 1);
 						gl.glNormal3f(norm.x, norm.y, norm.z);
 					}
@@ -266,9 +280,9 @@ public class ObjModel implements j3dio.Exportable, j3dio.LWJGLRenderable, j3dio.
 	@Override
 	public void lwjglrender() {
 		for (ObjFace face : faces) {
-			GL11.glBegin(GL11.GL_LINE_LOOP);
+			GL11.glBegin(GL11.GL_POLYGON);
 				for (int i = 0; i < face.size; i++) {
-					if (face.hasNorms()) {
+					if (face.hasNormals()) {
 						Point3f norm = norms.get(face.normIndxs[i] - 1);
 						GL11.glNormal3f(norm.x, norm.y, norm.z);
 					}

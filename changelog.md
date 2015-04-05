@@ -1,5 +1,11 @@
 Beta
 ====
+
+5.0
+---
+ * Added `.dae` file support
+ * Added javadoc
+
 4.3
 ---
  * Added JOGL render support

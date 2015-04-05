@@ -2,6 +2,10 @@ package j3dio.raw;
 
 import java.util.List;
 
+/**
+ * @author Evan Shimoniak
+ * @since 2.0
+**/
 public class RawFace {
 	public int[] vertIndxs;
 	public int size;

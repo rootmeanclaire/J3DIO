@@ -2,6 +2,10 @@ package j3dio.obj;
 
 import j3dio.Point3f;
 
+/**
+ * @author Evan Shimoniak
+ * @since 2.0 beta
+**/
 public class MtlPoint3f extends Point3f {
 	public MtlMaterial mtl = null;
 	
