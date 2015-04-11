@@ -1,6 +1,8 @@
 package j3dio.ply;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -24,6 +26,7 @@ public class Element {
 	};
 	
 	public final String name;
+	private List<String> propOrder = new ArrayList<String>();
 	private Map<String, Object> properties = new HashMap<String, Object>();
 	
 	public Element(String definition) {
@@ -35,10 +38,16 @@ public class Element {
 			String[] splitln = ln.split("\\s");
 			
 			if (splitln[0].equals("property")) {
+				//If property is list
 				if (splitln[1].equals("list")) {
-					properties.put(splitln[4], new ListType(Datatype.valueOf(splitln[2].toUpperCase()), Datatype.valueOf(splitln[3].toUpperCase())));
+					properties.put(splitln[4], new ListType(
+						Datatype.valueOf(splitln[2].toUpperCase()),
+						Datatype.valueOf(splitln[3].toUpperCase())
+					));
+					propOrder.add(splitln[4]);
 				} else {
 					properties.put(splitln[2], Datatype.valueOf(splitln[1].toUpperCase()));
+					propOrder.add(splitln[2]);
 				}
 			} else if (splitln[0].equals("element")) {
 				continue;
@@ -63,5 +72,8 @@ public class Element {
 	
 	public ElementInstance instantiate() {
 		return new ElementInstance(this);
+	}
+	public List<String> getPropertyOrder() {
+		return propOrder;
 	}
 }

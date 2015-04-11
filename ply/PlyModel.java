@@ -26,6 +26,7 @@ public class PlyModel implements j3dio.Exportable, j3dio.LWJGLRenderable, j3dio.
 	public enum Format {ASCII, BIN_LITTLE_ENDIAN, BIN_BIG_ENDIAN}
 	private Map<Element, Integer> elements = new HashMap<Element, Integer>();
 	private List<ElementInstance> data = new ArrayList<ElementInstance>();
+	private List<String> elementOrder = new ArrayList<String>();
 	
 	/**
 	 * @param file The file to be loaded
@@ -78,6 +79,7 @@ public class PlyModel implements j3dio.Exportable, j3dio.LWJGLRenderable, j3dio.
 			else if (splitStr[0].equals("element")) {
 				if (!firstElement) {
 					elements.put(new Element(sb.toString()), Integer.parseInt(sb.toString().split("\\s")[2]));
+					elementOrder.add(sb.toString().split("\\s+")[1]);
 					sb = new StringBuilder();
 				} else {
 					firstElement = false;
@@ -89,6 +91,7 @@ public class PlyModel implements j3dio.Exportable, j3dio.LWJGLRenderable, j3dio.
 			}
 			else if (splitStr[0].equals("end_header")) {
 				elements.put(new Element(sb.toString()), Integer.parseInt(sb.toString().split("\\s")[2]));
+				elementOrder.add(sb.toString().split("\\s+")[1]);
 				break;
 			}
 		}
@@ -96,10 +99,11 @@ public class PlyModel implements j3dio.Exportable, j3dio.LWJGLRenderable, j3dio.
 		//Parse data
 		switch (format) {
 			case ASCII:
-				//Iterate through defined elements
-				for (Element element : elements.keySet()) {
+				//Iterate through defined elements in order
+				for (String elemName : elementOrder) {
+					Element element = getElementByName(elemName);
 					//Oddly necessary
-					System.out.println("Instantiating " + elements.get(element) + " " + element);
+//					System.out.println("Instantiating " + elements.get(element) + " " + element);
 					
 					//Instantiate current element x times
 					for (int i = 0; i < elements.get(element); i++) {
@@ -108,6 +112,7 @@ public class PlyModel implements j3dio.Exportable, j3dio.LWJGLRenderable, j3dio.
 						}
 					}
 				}
+				
 				break;
 			case BIN_LITTLE_ENDIAN:
 				//TODO
@@ -136,7 +141,8 @@ public class PlyModel implements j3dio.Exportable, j3dio.LWJGLRenderable, j3dio.
 		//Write header
 		out.println("ply");
 		out.println("format ascii 1.0");
-		for (Element element : elements.keySet()) {
+		for (String elemName : elementOrder) {
+			Element element = getElementByName(elemName);
 			out.println("element " + element.name + " " + elements.get(element));
 			for (String propName : element.getProperties().keySet()) {
 				if (element.getProperties().get(propName) instanceof Datatype) {
@@ -231,5 +237,16 @@ public class PlyModel implements j3dio.Exportable, j3dio.LWJGLRenderable, j3dio.
 		} else {
 			//TODO
 		}
+	}
+	
+	public Element getElementByName(String name) {
+		for (Element e : elements.keySet()) {
+			if (e.name.equals(name)) {
+				return e;
+			}
+		}
+		
+		
+		return null;
 	}
 }

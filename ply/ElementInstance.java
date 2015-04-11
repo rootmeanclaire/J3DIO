@@ -34,6 +34,7 @@ public class ElementInstance {
 	 * <b>Value:</b> Property value  
 	**/
 	private Map<String, Object> props = new HashMap<String, Object>();
+	private List<String> propOrder = new ArrayList<String>();
 	
 	ElementInstance(Element datatype) {
 		this.tyepname = datatype.name;
@@ -46,6 +47,7 @@ public class ElementInstance {
 	ElementInstance(Element datatype, String str) {
 		this.tyepname = datatype.name;
 		Map<String, Object> elemProps = datatype.getProperties();
+		propOrder = datatype.getPropertyOrder();
 		String[] splitStr = str.split("\\s+");
 		int i = 0;
 		
@@ -66,7 +68,7 @@ public class ElementInstance {
 		}
 		
 		//Instantiate all properties
-		for (String propName : elemProps.keySet()) {
+		for (String propName : propOrder) {
 			//If property is not a list
 			if (!(elemProps.get(propName) instanceof ListType)) {
 				props.put(propName,
@@ -99,7 +101,8 @@ public class ElementInstance {
 //			System.out.print(propName + " ");
 //		}
 //		System.out.print("\n");
-		for (Object propVal : props.values()) {
+		for (String propName : propOrder) {
+			Object propVal = props.get(propName);
 			if (propVal instanceof List) {
 				List<?> listProp = (List<?>) propVal;
 				
