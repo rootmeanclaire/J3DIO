@@ -1,6 +1,10 @@
 Beta
 ====
 
+5.1
+---
+ * Fixed `.ply` bug
+
 5.0
 ---
  * Added `.dae` file support
