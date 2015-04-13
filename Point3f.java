@@ -1,6 +1,7 @@
 package j3dio;
 
 import java.nio.ByteBuffer;
+import java.nio.ByteOrder;
 
 /**
  * @author Evan Shimoniak
@@ -64,9 +65,9 @@ public class Point3f implements Byteable {
 		byte[] allBytes = new byte[getByteSize()];
 		int i = 0;
 		
-		byte[] xbytes = ByteBuffer.allocate(4).putFloat(x).array();
-		byte[] ybytes = ByteBuffer.allocate(4).putFloat(y).array();
-		byte[] zbytes = ByteBuffer.allocate(4).putFloat(z).array();
+		byte[] xbytes = ByteBuffer.allocate(4).order(ByteOrder.LITTLE_ENDIAN).putFloat(x).array();
+		byte[] ybytes = ByteBuffer.allocate(4).order(ByteOrder.LITTLE_ENDIAN).putFloat(y).array();
+		byte[] zbytes = ByteBuffer.allocate(4).order(ByteOrder.LITTLE_ENDIAN).putFloat(z).array();
 		
 		for (byte b : xbytes) {
 			allBytes[i] = b;

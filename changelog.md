@@ -1,6 +1,10 @@
 Beta
 ====
 
+5.2
+---
+ * Fixed `.stl` bug
+
 5.1
 ---
  * Fixed `.ply` bug

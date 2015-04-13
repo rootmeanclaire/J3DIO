@@ -73,6 +73,7 @@ public class StlModel implements j3dio.Exportable, j3dio.Byteable, j3dio.LWJGLRe
 			char[] headerChars = new char[80];
 			Path path = Paths.get(file.getPath());
 			byte[] data = Files.readAllBytes(path);
+			int numFaces;
 			
 			for (int i = 0; i < 80; i++) {
 				headerChars[i] = (char)data[i];
@@ -80,12 +81,19 @@ public class StlModel implements j3dio.Exportable, j3dio.Byteable, j3dio.LWJGLRe
 			
 			header = new String(headerChars);
 			
+			{
+				ByteBuffer buffer = ByteBuffer.wrap(
+					Arrays.copyOfRange(data, 80, 84)
+				).order(ByteOrder.LITTLE_ENDIAN);
+				numFaces = buffer.getInt();
+			}
+			
 			/*
 			 * Increment by 50 because each iteration reads 4 objects,
 			 * each consisting of 3 floats(4 bytes each) followed by a
 			 * short(2 bytes)
 			 */
-			for (int i = 80; i < data.length - data.length % 50; i += 4 * 3 * 4 + 2) {
+			for (int i = 84; i < data.length - data.length % 50; i += 4 * 3 * 4 + 2) {
 				Point3f normal, vert1, vert2, vert3;
 				
 				float nx = ByteBuffer.wrap(
@@ -212,6 +220,18 @@ public class StlModel implements j3dio.Exportable, j3dio.Byteable, j3dio.LWJGLRe
 			i++;
 		}
 		
+		{
+			byte[] numFacesAsBytes = ByteBuffer.allocate(4).order(ByteOrder.LITTLE_ENDIAN).putInt(faces.size()).array();
+			bytes[i] = numFacesAsBytes[0];
+			i++;
+			bytes[i] = numFacesAsBytes[1];
+			i++;
+			bytes[i] = numFacesAsBytes[2];
+			i++;
+			bytes[i] = numFacesAsBytes[3];
+			i++;
+		}
+		
 		for (FaceT face : faces) {
 			byte[] faceBytes = face.toBytes();
 			
@@ -226,7 +246,7 @@ public class StlModel implements j3dio.Exportable, j3dio.Byteable, j3dio.LWJGLRe
 	
 	@Override
 	public int getByteSize() {
-		return 80 + faces.size() * faces.get(0).getByteSize();
+		return 80 + 4 + faces.size() * faces.get(0).getByteSize();
 	}
 	
 	@Override
